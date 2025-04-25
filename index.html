@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>การ์ดแต่งงาน - Nut & Bat</title>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    .section {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    }
+    .section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .slider-container {
+      position: relative;
+      width: 100%;
+      max-width: 1280px;
+      overflow: hidden;
+    }
+    .slider {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+    }
+    .slide {
+      flex: 0 0 33.33%;
+      padding: 0 8px;
+    }
+    .slide img {
+      width: 100%;
+      height: 384px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+    .dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .dot {
+      width: 10px;
+      height: 10px;
+      background-color: #A0A0A0;
+      border-radius: 50%;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    .dot.active {
+      background-color: #4A4A4A;
+    }
+    .lightbox {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .lightbox img {
+      max-width: 90%;
+      max-height: 90%;
+      border-radius: 8px;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      color: white;
+      cursor: pointer;
+    }
+    .gallery-large img {
+      aspect-ratio: 3 / 4;
+      object-fit: cover;
+    }
+    .gallery-small img {
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+    @media (max-width: 768px) {
+      .slide {
+        flex: 0 0 100%;
+      }
+      .gallery-large img {
+        aspect-ratio: 4 / 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const CountdownTimer = () => {
+      const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+      React.useEffect(() => {
+        const weddingDate = new Date('2025-07-26T00:00:00');
+        const updateTimer = () => {
+          const now = new Date();
+          const timeDiff = weddingDate - now;
+
+          if (timeDiff <= 0) {
+            setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            return;
+          }
+
+          const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+          setTimeLeft({ days, hours, minutes, seconds });
+        };
+
+        updateTimer();
+        const interval = setInterval(updateTimer, 1000);
+        return () => clearInterval(interval);
+      }, []);
+
+      return (
+        <div className="grid grid-cols-4 gap-4">
+          {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
+            <div key={unit} className="text-center">
+              <div
+                className="bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 700,
+                  color: '#4A4A4A',
+                }}
+              >
+                {String(timeLeft[unit]).padStart(2, '0')}
+              </div>
+              <p
+                className="text-gray-600 mt-2 capitalize"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                {unit}
+              </p>
+            </div>
+          ))}
+        </div>
+      );
+    };
+
+    const Slider = () => {
+      const [currentIndex, setCurrentIndex] = React.useState(0);
+      const images = [
+        'https://via.placeholder.com/400x600?text=Photo+1',
+        'https://via.placeholder.com/400x600?text=Photo+2',
+        'https://via.placeholder.com/400x600?text=Photo+3',
+      ];
+
+      React.useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        }, 3000);
+        return () => clearInterval(interval);
+      }, [images.length]);
+
+      const transformValue = window.innerWidth <= 768 ? `translateX(-${currentIndex * 100}%)` : 'translateX(0)';
+
+      return (
+        <div className="slider-container">
+          <div className="slider" style={{ transform: transformValue }}>
+            {images.map((image, index) => (
+              <div key={index} className="slide">
+                <img src={image} alt={`Slide ${index + 1}`} />
+              </div>
+            ))}
+          </div>
+          <div className="dots">
+            {images.map((_, index) => (
+              <div
+                key={index}
+                className={`dot ${currentIndex === index ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
+              ></div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const Gallery = () => {
+      const [selectedImage, setSelectedImage] = React.useState(null);
+
+      const largeImages = [
+        'https://via.placeholder.com/400x600?text=Large+Photo+1',
+        'https://via.placeholder.com/400x600?text=Large+Photo+2',
+        'https://via.placeholder.com/400x600?text=Large+Photo+3',
+      ];
+
+      const smallImages = [
+        'https://via.placeholder.com/200x150?text=Small+Photo+1',
+        'https://via.placeholder.com/200x150?text=Small+Photo+2',
+        'https://via.placeholder.com/200x150?text=Small+Photo+3',
+        'https://via.placeholder.com/200x150?text=Small+Photo+4',
+        'https://via.placeholder.com/200x150?text=Small+Photo+5',
+      ];
+
+      const openLightbox = (image) => {
+        setSelectedImage(image);
+      };
+
+      const closeLightbox = () => {
+        setSelectedImage(null);
+      };
+
+      return (
+        <div className="w-full max-w-5xl">
+          {/* รูปภาพใหญ่ 3 รูป */}
+          <div className="flex flex-col md:flex-row">
+            {largeImages.map((image, index) => (
+              <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
+                <img
+                  src={image}
+                  alt={`Large Gallery ${index + 1}`}
+                  className="w-full"
+                />
+              </div>
+            ))}
+          </div>
+          {/* หัวข้อ SPECIAL GALLERY */}
+          <h2
+            className="text-6xl md:text-8xl font-bold my-8 text-center"
+            style={{
+              fontFamily: "'Dancing Script', cursive",
+              color: '#A0A0A0',
+            }}
+          >
+            Special Gallery
+          </h2>
+          {/* รูปภาพเล็ก 5 รูป */}
+          <div className="flex flex-wrap justify-center">
+            {smallImages.map((image, index) => (
+              <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
+                <img
+                  src={image}
+                  alt={`Small Gallery ${index + 1}`}
+                  className="w-full"
+                />
+              </div>
+            ))}
+          </div>
+          {/* Lightbox */}
+          {selectedImage && (
+            <div className="lightbox" onClick={closeLightbox}>
+              <span className="lightbox-close" onClick={closeLightbox}>×</span>
+              <img src={selectedImage} alt="Selected" />
+            </div>
+          )}
+        </div>
+      );
+    };
+
+    const App = () => {
+      React.useEffect(() => {
+        const sections = document.querySelectorAll('.section');
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+              }
+            });
+          },
+          { threshold: 0.1 }
+        );
+
+        sections.forEach((section) => observer.observe(section));
+
+        return () => {
+          sections.forEach((section) => observer.unobserve(section));
+        };
+      }, []);
+
+      return (
+        <div className="flex flex-col items-center justify-center bg-gray-100">
+          {/* ส่วนที่ 1: ด้านบนสุด */}
+          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center">
+            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div
+                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl"
+                style={{
+                  backgroundImage: `url('https://via.placeholder.com/1200x800?text=Couple+Photo')`,
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                }}
+              ></div>
+            </div>
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+              <h1
+                className="text-6xl md:text-8xl font-bold mb-4"
+                style={{
+                  fontFamily: "'Dancing Script', cursive",
+                  color: '#8A9A9A',
+                }}
+              >
+                Nut & Bat
+              </h1>
+              <p
+                className="text-2xl md:text-3xl font-light mb-6"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#4A4A4A',
+                }}
+              >
+                New Chapter Begins
+              </p>
+              <div className="flex items-center justify-center mb-6">
+                <hr className="w-24 border-gray-400" />
+                <p
+                  className="mx-4 text-lg md:text-xl"
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  SAVE THE DATE
+                </p>
+                <hr className="w-24 border-gray-400" />
+              </div>
+              <h2
+                className="text-4xl md:text-5xl font-bold mb-8"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 700,
+                  color: '#4A4A4A',
+                }}
+              >
+                26 JUL 2025
+              </h2>
+              <p
+                className="text-lg md:text-xl font-light max-w-2xl mx-auto"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                YOU ARE INVITED TO OUR WEDDING CEREMONY AND TO THE CELEBRATION OF OUR MARRIAGE. DON’T MISS TO MEET US AND WE HOPE TO SEE YOU ON OUR SPECIAL DAY.
+              </p>
+            </div>
+          </div>
+
+          {/* ส่วนที่ 2: ตัวนับถอยหลัง */}
+          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100">
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+              <div className="flex items-center justify-center mb-4">
+                <hr className="w-24 border-gray-400" />
+                <p
+                  className="mx-4 text-2xl md:text-3xl"
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  SATURDAY
+                </p>
+                <hr className="w-24 border-gray-400" />
+              </div>
+              <h2
+                className="text-3xl md:text-4xl font-bold mb-4"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 700,
+                  color: '#4A4A4A',
+                }}
+              >
+                26 JUL 2025
+              </h2>
+              <p
+                className="text-lg md:text-xl font-light mb-8"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                Please join us in celebrating our love and marriage, countdown in…
+              </p>
+              <CountdownTimer />
+            </div>
+            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div
+                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl"
+                style={{
+                  backgroundImage: `url('https://via.placeholder.com/1200x800?text=Couple+Photo')`,
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                }}
+              ></div>
+            </div>
+          </div>
+
+          {/* ส่วนที่ 3: สไลด์รูปภาพ */}
+          <div className="section w-full h-screen flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
+            <div className="flex items-center justify-center mb-4">
+              <hr className="w-24 border-gray-400" />
+              <p
+                className="mx-4 text-2xl md:text-3xl uppercase"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                Best Moment Ever
+              </p>
+              <hr className="w-24 border-gray-400" />
+            </div>
+            <h2
+              className="text-3xl md:text-4xl font-bold mb-8 uppercase"
+              style={{
+                fontFamily: "'Montserrat', sans-serif",
+                fontWeight: 700,
+                color: '#4A4A4A',
+              }}
+            >
+              Nut & Bat
+            </h2>
+            <Slider />
+          </div>
+
+          {/* ส่วนที่ 4: สถานที่ */}
+          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100">
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+              <div className="flex items-center justify-center mb-4">
+                <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.243l-4.243-4.243m0 0l-4.243 4.243m4.243-4.243l4.243-4.243m-4.243 4.243l-4.243-4.243M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
+                </svg>
+                <p
+                  className="text-2xl md:text-3xl"
+                  style={{
+                    fontFamily: "'Montserrat', sans-serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  สถานที่จัดงาน
+                </p>
+              </div>
+              <h2
+                className="text-3xl md:text-4xl font-bold mb-4"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 700,
+                  color: '#4A4A4A',
+                }}
+              >
+                xxx
+              </h2>
+              <p
+                className="text-lg md:text-xl font-light mb-8"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                ต.หานโพธิ์ อ.เขาชัยสน จ.พัทลุง
+              </p>
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=7.5188034309114995,100.16880534483941"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 400,
+                  color: '#4A4A4A',
+                }}
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+                เส้นทางไปงาน
+              </a>
+            </div>
+            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+              <iframe
+                className="w-full h-full rounded-lg shadow-xl"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.7766826181745!2d100.16880534483941!3d7.5188034309114995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2zN8KwMzEnMDcuNyJOIDEwMMKwMTAnMDcuNyJF!5e0!3m2!1sen!2sth!4v1634567890123!5m2!1sen!2sth"
+                allowFullScreen=""
+                loading="lazy"
+                style={{
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                }}
+              ></iframe>
+            </div>
+          </div>
+
+          {/* ส่วนที่ 5: R.S.V.P */}
+          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center bg-[#E8F0EF]">
+            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div
+                className="w-full h-full bg-cover bg-center rounded-tl-[50%] rounded-tr-[50%] md:rounded-tl-[50%] md:rounded-bl-[50%] shadow-xl"
+                style={{
+                  backgroundImage: `url('https://via.placeholder.com/1200x800?text=Couple+Photo')`,
+                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                }}
+              ></div>
+            </div>
+            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+              <h1
+                className="text-6xl md:text-8xl font-bold mb-4"
+                style={{
+                  fontFamily: "'Dancing Script', cursive",
+                  color: '#8A9A9A',
+                }}
+              >
+                N & B
+              </h1>
+              <p
+                className="text-lg md:text-xl font-light mb-6"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                (ตอบรับการเข้าร่วมงาน)
+              </p>
+              <div className="flex items-center justify-center mb-6">
+                <hr className="w-24 border-gray-400" />
+                <div className="mx-4 text-gray-400">◇</div>
+                <hr className="w-24 border-gray-400" />
+              </div>
+              <p
+                className="text-lg md:text-xl font-light mb-6"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                กรุณาคลิกปุ่มด้านล่างเพื่อตอบรับและส่งคำอวยพรถึงบ่าวสาว
+              </p>
+              <a
+                href="https://forms.gle/wedding-rsvp-nut-bat"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 400,
+                  color: '#4A4A4A',
+                }}
+              >
+                ส่งคำตอบรับ
+                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                </svg>
+              </a>
+              <p
+                className="text-lg md:text-xl font-light mt-6"
+                style={{
+                  fontFamily: "'Montserrat', sans-serif",
+                  fontWeight: 300,
+                  color: '#A0A0A0',
+                }}
+              >
+                กรุณาตอบรับภายในวันที่ xx กรกฎาคม 2568
+              </p>
+            </div>
+          </div>
+
+          {/* ส่วนที่ 6: Special Gallery */}
+          <div className="section w-full h-screen flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
+            <Gallery />
+          </div>
+        </div>
+      );
+    };
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
