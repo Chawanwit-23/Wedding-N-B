@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nat & Bat</title>
+  <title>NAT & BAT</title>
   <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     html {
       scroll-behavior: smooth;
@@ -337,7 +338,7 @@
               <div
                 className={`bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4 countdown-number ${changed[unit] ? 'active' : ''}`}
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
                   color: '#4A4A4A',
                 }}
@@ -345,14 +346,14 @@
                 {String(timeLeft[unit]).padStart(2, '0')}
               </div>
               <p
-                className="text-gray-600 mt-2 capitalize"
+                className="text-gray-600 mt-2"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
               >
-                {unit}
+                {unit === 'days' ? 'วัน' : unit === 'hours' ? 'ชั่วโมง' : unit === 'minutes' ? 'นาที' : 'วินาที'}
               </p>
             </div>
           ))}
@@ -361,7 +362,7 @@
     };
 
     const Slider = () => {
-      const [currentIndex, setCurrentIndex] = React.useState(0);
+      const [currentIndex, setCurrentIndex] = React.useState(1); // เริ่มที่ 1 เพราะเพิ่มรูปซ้ำที่หน้าและท้าย
       const images = [
         'https://via.placeholder.com/400x600?text=Photo+1',
         'https://via.placeholder.com/400x600?text=Photo+2',
@@ -369,21 +370,59 @@
         'https://via.placeholder.com/400x600?text=Photo+4',
       ];
 
+      // เพิ่มรูปซ้ำเพื่อให้วนได้สมูธ: [สุดท้าย, 1, 2, 3, 4, แรก]
+      const extendedImages = [
+        images[images.length - 1], // รูปสุดท้าย
+        ...images, // รูปทั้งหมด
+        images[0], // รูปแรก
+      ];
+
+      const totalSlides = extendedImages.length;
+
       React.useEffect(() => {
         const interval = setInterval(() => {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+          setCurrentIndex((prevIndex) => {
+            const nextIndex = prevIndex + 1;
+            if (nextIndex === totalSlides - 1) {
+              // เมื่อถึงรูปสุดท้าย (ที่ซ้ำ) ให้ย้ายกลับไปที่รูปแรก (ที่ซ้ำ) โดยไม่ให้เห็นการกระโดด
+              setTimeout(() => {
+                setCurrentIndex(1);
+              }, 500); // รอให้แอนิเมชันจบ (0.5 วินาที)
+              return nextIndex;
+            }
+            return nextIndex;
+          });
         }, 3000);
         return () => clearInterval(interval);
-      }, [images.length]);
+      }, [totalSlides]);
 
-      const transformValue = window.innerWidth <= 640 ? `translateX(-${currentIndex * 100}%)` : window.innerWidth <= 1024 ? `translateX(-${currentIndex * 50}%)` : 'translateX(0)';
+      // คำนวณ transform ตามขนาดหน้าจอ
+      const getTransformValue = () => {
+        if (window.innerWidth <= 640) {
+          // มือถือ: แสดง 1 รูป
+          return `translateX(-${currentIndex * 100}%)`;
+        } else if (window.innerWidth <= 1024) {
+          // แท็บเล็ต: แสดง 2 รูป
+          return `translateX(-${currentIndex * 50}%)`;
+        } else {
+          // เดสก์ท็อป: แสดง 4 รูป
+          return `translateX(-${currentIndex * 25}%)`;
+        }
+      };
+
+      // คำนวณดัชนีที่แท้จริงสำหรับ dots (ไม่นับรูปซ้ำ)
+      const getDotIndex = () => {
+        if (currentIndex === 0) return images.length - 1;
+        if (currentIndex === totalSlides - 1) return 0;
+        return currentIndex - 1;
+      };
 
       return (
         <div className="slider-container">
-          <div className="slider" style={{ transform: transformValue }}>
-            {images.map((image, index) => (
+          <div className="slider" style={{ transform: getTransformValue() }}>
+            {extendedImages.map((image, index) => (
               <div key={index} className="slide">
-                <img src={image} alt={`Slide ${index + 1}`} />
+                <img src={image} alt={`ภาพที่ ${index}`} />
               </div>
             ))}
           </div>
@@ -391,8 +430,8 @@
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`dot ${currentIndex === index ? 'active' : ''}`}
-                onClick={() => setCurrentIndex(index)}
+                className={`dot ${getDotIndex() === index ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index + 1)} // +1 เพราะเริ่มที่ index 1
               ></div>
             ))}
           </div>
@@ -477,7 +516,7 @@
                 <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
                   <img
                     src={image}
-                    alt={`Large Gallery ${index + 1}`}
+                    alt={`ภาพใหญ่ที่ ${index + 1}`}
                     className="w-full"
                   />
                 </div>
@@ -497,7 +536,7 @@
                 <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
                   <img
                     src={image}
-                    alt={`Small Gallery ${index + 1}`}
+                    alt={`ภาพเล็กที่ ${index + 1}`}
                     className="w-full"
                   />
                 </div>
@@ -508,7 +547,7 @@
                 <span className="lightbox-close" onClick={closeLightbox}>×</span>
                 <span className="lightbox-nav left" onClick={prevImage}>❮</span>
                 <span className="lightbox-nav right" onClick={nextImage}>❯</span>
-                <img src={selectedImage} alt="Selected" />
+                <img src={selectedImage} alt="ภาพที่เลือก" />
               </div>
             )}
           </div>
@@ -560,7 +599,7 @@
             className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
             onClick={scrollToTop}
             style={{
-              fontFamily: "'Montserrat', sans-serif",
+              fontFamily: "'Noto Serif Thai', serif",
             }}
           >
             ↑
@@ -589,7 +628,7 @@
               <p
                 className="text-2xl md:text-3xl font-light mb-6 fade-in-up-delay"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#4A4A4A',
                 }}
@@ -601,7 +640,7 @@
                 <p
                   className="mx-4 text-lg md:text-xl"
                   style={{
-                    fontFamily: "'Montserrat', sans-serif",
+                    fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
                     color: '#A0A0A0',
                   }}
@@ -613,22 +652,22 @@
               <h2
                 className="text-4xl md:text-5xl font-bold mb-8"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
                   color: '#4A4A4A',
                 }}
               >
-                26 JUL 2025
+                26 กรกฎาคม 2568
               </h2>
               <p
                 className="text-lg md:text-xl font-light max-w-2xl mx-auto"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
               >
-                YOU ARE INVITED TO OUR WEDDING CEREMONY AND TO THE CELEBRATION OF OUR MARRIAGE. DON’T MISS TO MEET US AND WE HOPE TO SEE YOU ON OUR SPECIAL DAY.
+                ขอเรียนเชิญท่านร่วมเป็นเกียรติในพิธีสมรสของเรา และร่วมเฉลิมฉลองความรักอันงดงาม โปรดอย่าพลาดโอกาสพบปะและร่วมยินดีในวันสำคัญของเรา
               </p>
             </div>
           </div>
@@ -640,34 +679,34 @@
                 <p
                   className="mx-4 text-2xl md:text-3xl"
                   style={{
-                    fontFamily: "'Montserrat', sans-serif",
+                    fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
                     color: '#A0A0A0',
                   }}
                 >
-                  SATURDAY
+                  วันเสาร์
                 </p>
                 <hr className="w-24 border-gray-400" />
               </div>
               <h2
                 className="text-3xl md:text-4xl font-bold mb-4"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
                   color: '#4A4A4A',
                 }}
               >
-                26 JUL 2025
+                26 กรกฎาคม 2568
               </h2>
               <p
                 className="text-lg md:text-xl font-light mb-8"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
               >
-                Please join us in celebrating our love and marriage, countdown in…
+                ขอเชิญร่วมเฉลิมฉลองความรักและการเริ่มต้นชีวิตคู่ของเรา นับถอยหลังสู่พิธีใน...
               </p>
               <CountdownTimer />
             </div>
@@ -686,26 +725,26 @@
             <div className="flex items-center justify-center mb-4">
               <hr className="w-24 border-gray-400" />
               <p
-                className="mx-4 text-2xl md:text-3xl uppercase"
+                className="mx-4 text-2xl md:text-3xl"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
               >
-                Best Moment Ever
+                ช่วงเวลาสุดพิเศษ
               </p>
               <hr className="w-24 border-gray-400" />
             </div>
             <h2
-              className="text-3xl md:text-4xl font-bold mb-8 uppercase"
+              className="text-3xl md:text-4xl font-bold mb-8"
               style={{
-                fontFamily: "'Montserrat', sans-serif",
+                fontFamily: "'Noto Serif Thai', serif",
                 fontWeight: 700,
                 color: '#4A4A4A',
               }}
             >
-              Nat & Bat
+              NAT & BAT
             </h2>
             <Slider />
           </div>
@@ -719,7 +758,7 @@
                 <p
                   className="text-2xl md:text-3xl"
                   style={{
-                    fontFamily: "'Montserrat', sans-serif",
+                    fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
                     color: '#A0A0A0',
                   }}
@@ -730,7 +769,7 @@
               <h2
                 className="text-3xl md:text-4xl font-bold mb-4"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
                   color: '#4A4A4A',
                 }}
@@ -740,7 +779,7 @@
               <p
                 className="text-lg md:text-xl font-light mb-8"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
@@ -753,7 +792,7 @@
                 rel="noopener noreferrer"
                 className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 400,
                   color: '#4A4A4A',
                 }}
@@ -800,7 +839,7 @@
               <p
                 className="text-lg md:text-xl font-light mb-6"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
@@ -815,7 +854,7 @@
               <p
                 className="text-lg md:text-xl font-light mb-6"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
@@ -828,7 +867,7 @@
                 rel="noopener noreferrer"
                 className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 400,
                   color: '#4A4A4A',
                 }}
@@ -841,7 +880,7 @@
               <p
                 className="text-lg md:text-xl font-light mt-6"
                 style={{
-                  fontFamily: "'Montserrat', sans-serif",
+                  fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
                   color: '#A0A0A0',
                 }}
