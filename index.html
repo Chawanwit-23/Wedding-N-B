@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
     html {
@@ -59,6 +60,13 @@
     .dot.active {
       background-color: #4A4A4A;
     }
+    .gallery-large img, .gallery-small img {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .gallery-large img:hover, .gallery-small img:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
     .lightbox {
       position: fixed;
       top: 0;
@@ -70,11 +78,16 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      animation: fadeIn 0.3s ease-in-out;
     }
     .lightbox img {
       max-width: 90%;
       max-height: 90%;
       border-radius: 8px;
+      animation: zoomIn 0.3s ease-in-out;
+    }
+    .lightbox.fade-out {
+      animation: fadeOut 0.3s ease-in-out;
     }
     .lightbox-close {
       position: absolute;
@@ -84,6 +97,21 @@
       color: white;
       cursor: pointer;
     }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    .lightbox-nav.left {
+      left: 20px;
+    }
+    .lightbox-nav.right {
+      right: 20px;
+    }
     .gallery-large img {
       aspect-ratio: 3 / 4;
       object-fit: cover;
@@ -91,6 +119,35 @@
     .gallery-small img {
       aspect-ratio: 4 / 3;
       object-fit: cover;
+    }
+    .countdown-number {
+      transition: all 0.3s ease;
+    }
+    .countdown-number.active {
+      animation: pulse 0.5s ease;
+    }
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
     }
     @media (max-width: 768px) {
       .slide {
@@ -107,6 +164,7 @@
   <script type="text/babel">
     const CountdownTimer = () => {
       const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      const [changed, setChanged] = React.useState({ days: false, hours: false, minutes: false, seconds: false });
 
       React.useEffect(() => {
         const weddingDate = new Date('2025-07-26T00:00:00');
@@ -116,6 +174,7 @@
 
           if (timeDiff <= 0) {
             setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            setChanged({ days: false, hours: false, minutes: false, seconds: false });
             return;
           }
 
@@ -124,20 +183,27 @@
           const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
           const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
 
+          setChanged({
+            days: days !== timeLeft.days,
+            hours: hours !== timeLeft.hours,
+            minutes: minutes !== timeLeft.minutes,
+            seconds: seconds !== timeLeft.seconds,
+          });
+
           setTimeLeft({ days, hours, minutes, seconds });
         };
 
         updateTimer();
         const interval = setInterval(updateTimer, 1000);
         return () => clearInterval(interval);
-      }, []);
+      }, []); // ลบ dependency [timeLeft] เพื่อป้องกันการเรียกซ้ำไม่สิ้นสุด
 
       return (
         <div className="grid grid-cols-4 gap-4">
           {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
             <div key={unit} className="text-center">
               <div
-                className="bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4"
+                className={`bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4 countdown-number ${changed[unit] ? 'active' : ''}`}
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 700,
@@ -203,14 +269,13 @@
 
     const Gallery = () => {
       const [selectedImage, setSelectedImage] = React.useState(null);
+      const [fadeOut, setFadeOut] = React.useState(false);
+      const [currentIndex, setCurrentIndex] = React.useState(0);
 
-      const largeImages = [
+      const allImages = [
         'https://via.placeholder.com/400x600?text=Large+Photo+1',
         'https://via.placeholder.com/400x600?text=Large+Photo+2',
         'https://via.placeholder.com/400x600?text=Large+Photo+3',
-      ];
-
-      const smallImages = [
         'https://via.placeholder.com/200x150?text=Small+Photo+1',
         'https://via.placeholder.com/200x150?text=Small+Photo+2',
         'https://via.placeholder.com/200x150?text=Small+Photo+3',
@@ -218,57 +283,106 @@
         'https://via.placeholder.com/200x150?text=Small+Photo+5',
       ];
 
+      const largeImages = allImages.slice(0, 3);
+      const smallImages = allImages.slice(3);
+
       const openLightbox = (image) => {
         setSelectedImage(image);
+        setCurrentIndex(allImages.indexOf(image));
+        setFadeOut(false);
       };
 
       const closeLightbox = () => {
-        setSelectedImage(null);
+        setFadeOut(true);
       };
 
+      const handleAnimationEnd = () => {
+        if (fadeOut) {
+          setSelectedImage(null);
+          setFadeOut(false);
+        }
+      };
+
+      const nextImage = () => {
+        const nextIndex = (currentIndex + 1) % allImages.length;
+        setCurrentIndex(nextIndex);
+        setSelectedImage(allImages[nextIndex]);
+      };
+
+      const prevImage = () => {
+        const prevIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+        setCurrentIndex(prevIndex);
+        setSelectedImage(allImages[prevIndex]);
+      };
+
+      React.useEffect(() => {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 50, density: { enable: true, value_area: 800 } },
+            color: { value: '#A0A0A0' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.5, random: true },
+            size: { value: 3, random: true },
+            line_linked: { enable: false },
+            move: { enable: true, speed: 1, direction: 'none', random: true, straight: false, out_mode: 'out' },
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+            modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 4 } },
+          },
+          retina_detect: true,
+        });
+      }, []);
+
       return (
-        <div className="w-full max-w-5xl">
-          {/* รูปภาพใหญ่ 3 รูป */}
-          <div className="flex flex-col md:flex-row">
-            {largeImages.map((image, index) => (
-              <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
-                <img
-                  src={image}
-                  alt={`Large Gallery ${index + 1}`}
-                  className="w-full"
-                />
-              </div>
-            ))}
-          </div>
-          {/* หัวข้อ SPECIAL GALLERY */}
-          <h2
-            className="text-6xl md:text-8xl font-bold my-8 text-center"
-            style={{
-              fontFamily: "'Dancing Script', cursive",
-              color: '#A0A0A0',
-            }}
-          >
-            Special Gallery
-          </h2>
-          {/* รูปภาพเล็ก 5 รูป */}
-          <div className="flex flex-wrap justify-center">
-            {smallImages.map((image, index) => (
-              <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
-                <img
-                  src={image}
-                  alt={`Small Gallery ${index + 1}`}
-                  className="w-full"
-                />
-              </div>
-            ))}
-          </div>
-          {/* Lightbox */}
-          {selectedImage && (
-            <div className="lightbox" onClick={closeLightbox}>
-              <span className="lightbox-close" onClick={closeLightbox}>×</span>
-              <img src={selectedImage} alt="Selected" />
+        <div className="w-full max-w-5xl relative">
+          <div id="particles-js"></div>
+          <div className="relative z-10">
+            {/* รูปภาพใหญ่ 3 รูป */}
+            <div className="flex flex-col md:flex-row">
+              {largeImages.map((image, index) => (
+                <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
+                  <img
+                    src={image}
+                    alt={`Large Gallery ${index + 1}`}
+                    className="w-full"
+                  />
+                </div>
+              ))}
             </div>
-          )}
+            {/* หัวข้อ SPECIAL GALLERY */}
+            <h2
+              className="text-6xl md:text-8xl font-bold my-8 text-center"
+              style={{
+                fontFamily: "'Dancing Script', cursive",
+                color: '#A0A0A0',
+              }}
+            >
+              Special Gallery
+            </h2>
+            {/* รูปภาพเล็ก 5 รูป */}
+            <div className="flex flex-wrap justify-center">
+              {smallImages.map((image, index) => (
+                <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
+                  <img
+                    src={image}
+                    alt={`Small Gallery ${index + 1}`}
+                    className="w-full"
+                  />
+                </div>
+              ))}
+            </div>
+            {/* Lightbox */}
+            {selectedImage && (
+              <div className={`lightbox ${fadeOut ? 'fade-out' : ''}`} onAnimationEnd={handleAnimationEnd}>
+                <span className="lightbox-close" onClick={closeLightbox}>×</span>
+                <span className="lightbox-nav left" onClick={prevImage}>❮</span>
+                <span className="lightbox-nav right" onClick={nextImage}>❯</span>
+                <img src={selectedImage} alt="Selected" />
+              </div>
+            )}
+          </div>
         </div>
       );
     };
