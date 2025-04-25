@@ -8,6 +8,7 @@
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <style>
     html {
@@ -17,6 +18,10 @@
       opacity: 0;
       transform: translateY(20px);
       transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .section.visible {
       opacity: 1;
@@ -33,7 +38,7 @@
       transition: transform 0.5s ease-in-out;
     }
     .slide {
-      flex: 0 0 33.33%;
+      flex: 0 0 25%;
       padding: 0 8px;
     }
     .slide img {
@@ -59,6 +64,13 @@
     .dot.active {
       background-color: #4A4A4A;
     }
+    .gallery-large img, .gallery-small img {
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+    .gallery-large img:hover, .gallery-small img:hover {
+      transform: scale(1.05);
+      opacity: 0.9;
+    }
     .lightbox {
       position: fixed;
       top: 0;
@@ -70,11 +82,16 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      animation: fadeIn 0.3s ease-in-out;
     }
     .lightbox img {
       max-width: 90%;
       max-height: 90%;
       border-radius: 8px;
+      animation: zoomIn 0.3s ease-in-out;
+    }
+    .lightbox.fade-out {
+      animation: fadeOut 0.3s ease-in-out;
     }
     .lightbox-close {
       position: absolute;
@@ -84,6 +101,21 @@
       color: white;
       cursor: pointer;
     }
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      user-select: none;
+    }
+    .lightbox-nav.left {
+      left: 20px;
+    }
+    .lightbox-nav.right {
+      right: 20px;
+    }
     .gallery-large img {
       aspect-ratio: 3 / 4;
       object-fit: cover;
@@ -92,12 +124,169 @@
       aspect-ratio: 4 / 3;
       object-fit: cover;
     }
-    @media (max-width: 768px) {
+    .countdown-number {
+      transition: all 0.3s ease;
+    }
+    .countdown-number.active {
+      animation: pulse 0.5s ease;
+    }
+    #particles-js {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease forwards;
+    }
+    .fade-in-up-delay {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 1s ease forwards 0.3s;
+    }
+    .parallax {
+      background-attachment: fixed;
+      background-position: center;
+      background-size: cover;
+    }
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #8A9A9A;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 50%;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+      z-index: 1000;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      visibility: visible;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    /* Media Queries สำหรับ responsive */
+    @media (max-width: 640px) {
+      .section {
+        min-height: auto;
+        padding: 40px 16px;
+      }
+      .section > div {
+        flex-direction: column !important;
+      }
+      .section > div > div {
+        width: 100% !important;
+        margin-bottom: 20px;
+      }
+      .section .w-full.h-96 {
+        height: 200px;
+      }
+      h1 {
+        font-size: 2.5rem !important;
+      }
+      h2 {
+        font-size: 1.5rem !important;
+      }
+      p {
+        font-size: 1rem !important;
+      }
+      .countdown-number {
+        font-size: 1.5rem !important;
+        padding: 8px !important;
+      }
       .slide {
         flex: 0 0 100%;
       }
+      .slide img {
+        height: 200px;
+      }
       .gallery-large img {
         aspect-ratio: 4 / 3;
+      }
+      .gallery-small {
+        min-width: 120px !important;
+        max-width: 120px !important;
+        margin: 4px;
+      }
+      .parallax {
+        background-attachment: scroll;
+      }
+    }
+    @media (min-width: 641px) and (max-width: 1024px) {
+      .section {
+        min-height: auto;
+        padding: 60px 24px;
+      }
+      .section > div {
+        flex-direction: column;
+      }
+      .section > div > div {
+        width: 100% !important;
+        margin-bottom: 30px;
+      }
+      .section .w-full.h-96 {
+        height: 300px;
+      }
+      h1 {
+        font-size: 4rem !important;
+      }
+      h2 {
+        font-size: 2rem !important;
+      }
+      p {
+        font-size: 1.2rem !important;
+      }
+      .countdown-number {
+        font-size: 2rem !important;
+        padding: 12px !important;
+      }
+      .slide {
+        flex: 0 0 50%;
+      }
+      .slide img {
+        height: 300px;
+      }
+      .gallery-large img {
+        aspect-ratio: 3 / 4;
+      }
+      .gallery-small {
+        min-width: 150px !important;
+        max-width: 150px !important;
+        margin: 8px;
+      }
+      .parallax {
+        background-attachment: scroll;
+      }
+    }
+    @media (min-width: 1025px) {
+      .section {
+        min-height: 100vh;
+        padding: 80px 32px;
       }
     }
   </style>
@@ -107,6 +296,7 @@
   <script type="text/babel">
     const CountdownTimer = () => {
       const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+      const [changed, setChanged] = React.useState({ days: false, hours: false, minutes: false, seconds: false });
 
       React.useEffect(() => {
         const weddingDate = new Date('2025-07-26T00:00:00');
@@ -116,6 +306,7 @@
 
           if (timeDiff <= 0) {
             setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+            setChanged({ days: false, hours: false, minutes: false, seconds: false });
             return;
           }
 
@@ -123,6 +314,13 @@
           const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
           const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
           const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+          setChanged({
+            days: days !== timeLeft.days,
+            hours: hours !== timeLeft.hours,
+            minutes: minutes !== timeLeft.minutes,
+            seconds: seconds !== timeLeft.seconds,
+          });
 
           setTimeLeft({ days, hours, minutes, seconds });
         };
@@ -137,7 +335,7 @@
           {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
             <div key={unit} className="text-center">
               <div
-                className="bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4"
+                className={`bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4 countdown-number ${changed[unit] ? 'active' : ''}`}
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 700,
@@ -168,6 +366,7 @@
         'https://via.placeholder.com/400x600?text=Photo+1',
         'https://via.placeholder.com/400x600?text=Photo+2',
         'https://via.placeholder.com/400x600?text=Photo+3',
+        'https://via.placeholder.com/400x600?text=Photo+4',
       ];
 
       React.useEffect(() => {
@@ -177,7 +376,7 @@
         return () => clearInterval(interval);
       }, [images.length]);
 
-      const transformValue = window.innerWidth <= 768 ? `translateX(-${currentIndex * 100}%)` : 'translateX(0)';
+      const transformValue = window.innerWidth <= 640 ? `translateX(-${currentIndex * 100}%)` : window.innerWidth <= 1024 ? `translateX(-${currentIndex * 50}%)` : 'translateX(0)';
 
       return (
         <div className="slider-container">
@@ -203,14 +402,13 @@
 
     const Gallery = () => {
       const [selectedImage, setSelectedImage] = React.useState(null);
+      const [fadeOut, setFadeOut] = React.useState(false);
+      const [currentIndex, setCurrentIndex] = React.useState(0);
 
-      const largeImages = [
+      const allImages = [
         'https://via.placeholder.com/400x600?text=Large+Photo+1',
         'https://via.placeholder.com/400x600?text=Large+Photo+2',
         'https://via.placeholder.com/400x600?text=Large+Photo+3',
-      ];
-
-      const smallImages = [
         'https://via.placeholder.com/200x150?text=Small+Photo+1',
         'https://via.placeholder.com/200x150?text=Small+Photo+2',
         'https://via.placeholder.com/200x150?text=Small+Photo+3',
@@ -218,62 +416,109 @@
         'https://via.placeholder.com/200x150?text=Small+Photo+5',
       ];
 
+      const largeImages = allImages.slice(0, 3);
+      const smallImages = allImages.slice(3);
+
       const openLightbox = (image) => {
         setSelectedImage(image);
+        setCurrentIndex(allImages.indexOf(image));
+        setFadeOut(false);
       };
 
       const closeLightbox = () => {
-        setSelectedImage(null);
+        setFadeOut(true);
       };
 
+      const handleAnimationEnd = () => {
+        if (fadeOut) {
+          setSelectedImage(null);
+          setFadeOut(false);
+        }
+      };
+
+      const nextImage = () => {
+        const nextIndex = (currentIndex + 1) % allImages.length;
+        setCurrentIndex(nextIndex);
+        setSelectedImage(allImages[nextIndex]);
+      };
+
+      const prevImage = () => {
+        const prevIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+        setCurrentIndex(prevIndex);
+        setSelectedImage(allImages[prevIndex]);
+      };
+
+      React.useEffect(() => {
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 30, density: { enable: true, value_area: 800 } },
+            color: { value: '#F4B6C2' },
+            shape: { type: 'image', image: { src: 'https://www.pngall.com/wp-content/uploads/2016/07/Heart-PNG-Image.png', width: 32, height: 32 } },
+            opacity: { value: 0.7, random: true },
+            size: { value: 10, random: true },
+            line_linked: { enable: false },
+            move: { enable: true, speed: 0.5, direction: 'none', random: true, straight: false, out_mode: 'out' },
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+            modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } },
+          },
+          retina_detect: true,
+        });
+      }, []);
+
       return (
-        <div className="w-full max-w-5xl">
-          {/* รูปภาพใหญ่ 3 รูป */}
-          <div className="flex flex-col md:flex-row">
-            {largeImages.map((image, index) => (
-              <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
-                <img
-                  src={image}
-                  alt={`Large Gallery ${index + 1}`}
-                  className="w-full"
-                />
-              </div>
-            ))}
-          </div>
-          {/* หัวข้อ SPECIAL GALLERY */}
-          <h2
-            className="text-6xl md:text-8xl font-bold my-8 text-center"
-            style={{
-              fontFamily: "'Dancing Script', cursive",
-              color: '#A0A0A0',
-            }}
-          >
-            Special Gallery
-          </h2>
-          {/* รูปภาพเล็ก 5 รูป */}
-          <div className="flex flex-wrap justify-center">
-            {smallImages.map((image, index) => (
-              <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
-                <img
-                  src={image}
-                  alt={`Small Gallery ${index + 1}`}
-                  className="w-full"
-                />
-              </div>
-            ))}
-          </div>
-          {/* Lightbox */}
-          {selectedImage && (
-            <div className="lightbox" onClick={closeLightbox}>
-              <span className="lightbox-close" onClick={closeLightbox}>×</span>
-              <img src={selectedImage} alt="Selected" />
+        <div className="w-full max-w-5xl relative">
+          <div id="particles-js"></div>
+          <div className="relative z-10">
+            <div className="flex flex-col md:flex-row">
+              {largeImages.map((image, index) => (
+                <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
+                  <img
+                    src={image}
+                    alt={`Large Gallery ${index + 1}`}
+                    className="w-full"
+                  />
+                </div>
+              ))}
             </div>
-          )}
+            <h2
+              className="text-6xl md:text-8xl font-bold my-8 text-center"
+              style={{
+                fontFamily: "'Dancing Script', cursive",
+                color: '#A0A0A0',
+              }}
+            >
+              Special Gallery
+            </h2>
+            <div className="flex flex-wrap justify-center">
+              {smallImages.map((image, index) => (
+                <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
+                  <img
+                    src={image}
+                    alt={`Small Gallery ${index + 1}`}
+                    className="w-full"
+                  />
+                </div>
+              ))}
+            </div>
+            {selectedImage && (
+              <div className={`lightbox ${fadeOut ? 'fade-out' : ''}`} onAnimationEnd={handleAnimationEnd}>
+                <span className="lightbox-close" onClick={closeLightbox}>×</span>
+                <span className="lightbox-nav left" onClick={prevImage}>❮</span>
+                <span className="lightbox-nav right" onClick={nextImage}>❯</span>
+                <img src={selectedImage} alt="Selected" />
+              </div>
+            )}
+          </div>
         </div>
       );
     };
 
     const App = () => {
+      const [showBackToTop, setShowBackToTop] = React.useState(false);
+
       React.useEffect(() => {
         const sections = document.querySelectorAll('.section');
         const observer = new IntersectionObserver(
@@ -289,18 +534,42 @@
 
         sections.forEach((section) => observer.observe(section));
 
+        const handleScroll = () => {
+          if (window.scrollY > 300) {
+            setShowBackToTop(true);
+          } else {
+            setShowBackToTop(false);
+          }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+
         return () => {
           sections.forEach((section) => observer.unobserve(section));
+          window.removeEventListener('scroll', handleScroll);
         };
       }, []);
 
+      const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
       return (
         <div className="flex flex-col items-center justify-center bg-gray-100">
-          {/* ส่วนที่ 1: ด้านบนสุด */}
-          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center">
+          <button
+            className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
+            onClick={scrollToTop}
+            style={{
+              fontFamily: "'Montserrat', sans-serif",
+            }}
+          >
+            ↑
+          </button>
+
+          <div className="section w-full flex flex-col md:flex-row items-center justify-center">
             <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
               <div
-                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl"
+                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                 style={{
                   backgroundImage: `url('https://via.placeholder.com/1200x800?text=Couple+Photo')`,
                   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
@@ -309,7 +578,7 @@
             </div>
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
               <h1
-                className="text-6xl md:text-8xl font-bold mb-4"
+                className="text-6xl md:text-8xl font-bold mb-4 fade-in-up"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: '#8A9A9A',
@@ -318,7 +587,7 @@
                 Nat & Bat
               </h1>
               <p
-                className="text-2xl md:text-3xl font-light mb-6"
+                className="text-2xl md:text-3xl font-light mb-6 fade-in-up-delay"
                 style={{
                   fontFamily: "'Montserrat', sans-serif",
                   fontWeight: 300,
@@ -364,8 +633,7 @@
             </div>
           </div>
 
-          {/* ส่วนที่ 2: ตัวนับถอยหลัง */}
-          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100">
+          <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
               <div className="flex items-center justify-center mb-4">
                 <hr className="w-24 border-gray-400" />
@@ -405,7 +673,7 @@
             </div>
             <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
               <div
-                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl"
+                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                 style={{
                   backgroundImage: `url('https://via.placeholder.com/1200x800?text=Couple+Photo')`,
                   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
@@ -414,8 +682,7 @@
             </div>
           </div>
 
-          {/* ส่วนที่ 3: สไลด์รูปภาพ */}
-          <div className="section w-full h-screen flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
+          <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
             <div className="flex items-center justify-center mb-4">
               <hr className="w-24 border-gray-400" />
               <p
@@ -443,8 +710,7 @@
             <Slider />
           </div>
 
-          {/* ส่วนที่ 4: สถานที่ */}
-          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center bg-gray-100">
+          <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
               <div className="flex items-center justify-center mb-4">
                 <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -511,8 +777,7 @@
             </div>
           </div>
 
-          {/* ส่วนที่ 5: R.S.V.P */}
-          <div className="section w-full h-screen flex flex-col md:flex-row items-center justify-center bg-[#E8F0EF]">
+          <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#E8F0EF]">
             <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
               <div
                 className="w-full h-full bg-cover bg-center rounded-tl-[50%] rounded-tr-[50%] md:rounded-tl-[50%] md:rounded-bl-[50%] shadow-xl"
@@ -586,8 +851,7 @@
             </div>
           </div>
 
-          {/* ส่วนที่ 6: Special Gallery */}
-          <div className="section w-full h-screen flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
+          <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
             <Gallery />
           </div>
         </div>
