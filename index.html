@@ -4,12 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NAT & BAT</title>
-  <link rel="icon" type="image/x-icon" href="/imgs/logo.png">
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.development.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.22.5/babel.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.7/babel.min.js" crossorigin></script>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" crossorigin></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
@@ -24,6 +23,7 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
+      position: relative;
     }
     .section.visible {
       opacity: 1;
@@ -42,6 +42,11 @@
     .slide {
       flex: 0 0 25%;
       padding: 0 8px;
+      transform: scale(1);
+      transition: transform 0.3s ease;
+    }
+    .slide.active {
+      animation: zoomInSlide 0.5s ease;
     }
     .slide img {
       width: 100%;
@@ -67,11 +72,11 @@
       background-color: #4A4A4A;
     }
     .gallery-large img, .gallery-small img {
-      transition: transform 0.3s ease, opacity 0.3s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .gallery-large img:hover, .gallery-small img:hover {
       transform: scale(1.05);
-      opacity: 0.9;
+      box-shadow: 0 0 15px rgba(244, 182, 194, 0.5);
     }
     .lightbox {
       position: fixed;
@@ -128,11 +133,25 @@
     }
     .countdown-number {
       transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      position: relative;
     }
     .countdown-number.active {
-      animation: pulse 0.5s ease;
+      animation: pulseShadow 0.5s ease;
     }
-    #particles-js {
+    .countdown-number.active::after {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: #F4B6C2;
+      border-radius: 50%;
+      animation: sparkle 0.5s ease;
+      transform: translateX(-50%);
+    }
+    #particles-js, #stars-js {
       position: absolute;
       width: 100%;
       height: 100%;
@@ -147,6 +166,10 @@
       opacity: 0;
       transform: translateY(20px);
       animation: fadeInUp 1s ease forwards 0.3s;
+    }
+    .fade-in-text {
+      opacity: 0;
+      animation: fadeInText 1.2s ease forwards;
     }
     .parallax {
       background-attachment: fixed;
@@ -171,28 +194,84 @@
       opacity: 1;
       visibility: visible;
     }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .button-effect {
+      transition: transform 0.2s ease, background-color 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
-    @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
+    .button-effect:hover {
+      transform: scale(1.05);
+      background-color: #F4B6C2;
+      color: white;
     }
-    @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+    .button-effect::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease;
     }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-      100% { transform: scale(1); }
+    .button-effect:active::after {
+      width: 200px;
+      height: 200px;
+      opacity: 0;
     }
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .heart-effect {
+      position: relative;
     }
-    /* Media Queries สำหรับ responsive */
+    .heart-effect.clicked::after {
+      content: '♥';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #F4B6C2;
+      font-size: 20px;
+      animation: heartFloat 1s ease forwards;
+    }
+    .scroll-indicator {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 24px;
+      color: #A0A0A0;
+      animation: bounce 2s infinite;
+    }
+    .couple-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 32px;
+    }
+    .couple-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .couple-item img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+    .couple-item img:hover {
+      transform: scale(1.1);
+    }
+    .couple-fullname {
+      font-family: 'Noto Serif Thai', serif;
+      font-weight: 300;
+      color: #A0A0A0;
+      font-size: 1.25rem;
+    }
     @media (max-width: 640px) {
       .section {
         min-height: auto;
@@ -237,6 +316,20 @@
       }
       .parallax {
         background-attachment: scroll;
+      }
+      .scroll-indicator {
+        font-size: 18px;
+      }
+      .c Couple-container {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .couple-item img {
+        width: 150px;
+        height: 150px;
+      }
+      .couple-fullname {
+        font-size: 1rem;
       }
     }
     @media (min-width: 641px) and (max-width: 1024px) {
@@ -284,12 +377,64 @@
       .parallax {
         background-attachment: scroll;
       }
+      .couple-container {
+        gap: 24px;
+      }
+      .couple-item img {
+        width: 180px;
+        height: 180px;
+      }
+      .couple-fullname {
+        font-size: 1.125rem;
+      }
     }
     @media (min-width: 1025px) {
       .section {
         min-height: 100vh;
         padding: 80px 32px;
       }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; }
+      to { opacity: 0; }
+    }
+    @keyframes zoomIn {
+      from { transform: scale(0.8); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    @keyframes zoomInSlide {
+      from { transform: scale(0.95); }
+      to { transform: scale(1); }
+    }
+    @keyframes pulseShadow {
+      0% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+      50% { box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); }
+      100% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+    }
+    @keyframes sparkle {
+      0% { transform: translateX(-50%) scale(1); opacity: 1; }
+      100% { transform: translateX(-50%) scale(2); opacity: 0; }
+    }
+    @keyframes heartFloat {
+      0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+      100% { transform: translateX(-50%) translateY(-50px); opacity: 0; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInText {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-10px); }
+      60% { transform: translateY(-5px); }
     }
   </style>
 </head>
@@ -347,7 +492,7 @@
                 {String(timeLeft[unit]).padStart(2, '0')}
               </div>
               <p
-                className="text-gray-600 mt-2"
+                className="text-gray-600 mt-2 fade-in-text"
                 style={{
                   fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
@@ -363,67 +508,37 @@
     };
 
     const Slider = () => {
-      const [currentIndex, setCurrentIndex] = React.useState(1); // เริ่มที่ 1 เพราะเพิ่มรูปซ้ำที่หน้าและท้าย
+      const [currentIndex, setCurrentIndex] = React.useState(0);
       const images = [
-        'https://via.placeholder.com/400x600?text=Photo+1',
-        'https://via.placeholder.com/400x600?text=Photo+2',
-        'https://via.placeholder.com/400x600?text=Photo+3',
-        'https://via.placeholder.com/400x600?text=Photo+4',
+        'https://picsum.photos/400/600?random=1',
+        'https://picsum.photos/400/600?random=2',
+        'https://picsum.photos/400/600?random=3',
+        'https://picsum.photos/400/600?random=4',
       ];
-
-      // เพิ่มรูปซ้ำเพื่อให้วนได้สมูธ: [สุดท้าย, 1, 2, 3, 4, แรก]
-      const extendedImages = [
-        images[images.length - 1], // รูปสุดท้าย
-        ...images, // รูปทั้งหมด
-        images[0], // รูปแรก
-      ];
-
-      const totalSlides = extendedImages.length;
 
       React.useEffect(() => {
         const interval = setInterval(() => {
-          setCurrentIndex((prevIndex) => {
-            const nextIndex = prevIndex + 1;
-            if (nextIndex === totalSlides - 1) {
-              // เมื่อถึงรูปสุดท้าย (ที่ซ้ำ) ให้ย้ายกลับไปที่รูปแรก (ที่ซ้ำ) โดยไม่ให้เห็นการกระโดด
-              setTimeout(() => {
-                setCurrentIndex(1);
-              }, 500); // รอให้แอนิเมชันจบ (0.5 วินาที)
-              return nextIndex;
-            }
-            return nextIndex;
-          });
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
         }, 3000);
         return () => clearInterval(interval);
-      }, [totalSlides]);
+      }, [images.length]);
 
-      // คำนวณ transform ตามขนาดหน้าจอ
       const getTransformValue = () => {
         if (window.innerWidth <= 640) {
-          // มือถือ: แสดง 1 รูป
           return `translateX(-${currentIndex * 100}%)`;
         } else if (window.innerWidth <= 1024) {
-          // แท็บเล็ต: แสดง 2 รูป
           return `translateX(-${currentIndex * 50}%)`;
         } else {
-          // เดสก์ท็อป: แสดง 4 รูป
           return `translateX(-${currentIndex * 25}%)`;
         }
-      };
-
-      // คำนวณดัชนีที่แท้จริงสำหรับ dots (ไม่นับรูปซ้ำ)
-      const getDotIndex = () => {
-        if (currentIndex === 0) return images.length - 1;
-        if (currentIndex === totalSlides - 1) return 0;
-        return currentIndex - 1;
       };
 
       return (
         <div className="slider-container">
           <div className="slider" style={{ transform: getTransformValue() }}>
-            {extendedImages.map((image, index) => (
-              <div key={index} className="slide">
-                <img src={image} alt={`ภาพที่ ${index}`} />
+            {images.map((image, index) => (
+              <div key={index} className={`slide ${currentIndex === index ? 'active' : ''}`}>
+                <img src={image} alt={`ภาพที่ ${index + 1}`} onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'} />
               </div>
             ))}
           </div>
@@ -431,10 +546,77 @@
             {images.map((_, index) => (
               <div
                 key={index}
-                className={`dot ${getDotIndex() === index ? 'active' : ''}`}
-                onClick={() => setCurrentIndex(index + 1)} // +1 เพราะเริ่มที่ index 1
+                className={`dot ${currentIndex === index ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
               ></div>
             ))}
+          </div>
+        </div>
+      );
+    };
+
+    const CoupleIntro = () => {
+      return (
+        <div className="w-full flex flex-col items-center justify-center p-8 text-center">
+          <div className="flex items-center justify-center mb-4">
+            <hr className="w-24 border-gray-400" />
+            <p
+              className="mx-4 text-2xl md:text-3xl fade-in-text"
+              style={{
+                fontFamily: "'Noto Serif Thai', serif",
+                fontWeight: 300,
+                color: '#A0A0A0',
+              }}
+            >
+              เจ้าบ่าว & เจ้าสาว
+            </p>
+            <hr className="w-24 border-gray-400" />
+          </div>
+          <div className="couple-container">
+            <div className="couple-item">
+              <img
+                src="imgs/groom.png"
+                alt="เจ้าบ่าว"
+                className="fade-in-up"
+                onError={(e) => e.target.src = 'https://picsum.photos/200/200?random=0'}
+              />
+              <h3
+                className="text-3xl md:text-4xl font-bold mt-4 fade-in-text"
+                style={{
+                  fontFamily: "'Dancing Script', cursive",
+                  color: '#8B5A2B',
+                }}
+              >
+                Nat
+              </h3>
+              <p
+                className="couple-fullname mt-2 fade-in-text"
+              >
+                ว่าที่ ร.ต.ณัฐวุฒิ ทองทรง
+              </p>
+            </div>
+            <div className="couple-item">
+              <img
+                src="imgs/bride.png"
+                alt="เจ้าสาว"
+                className="fade-in-up"
+                onError={(e) => e.target.src = 'https://picsum.photos/200/200?random=0'}
+              />
+              <h3
+                className="text-3xl md:text-4xl font-bold mt-4 fade-in-text"
+                style={{
+                  fontFamily: "'Dancing Script', cursive",
+                  color: '#8B5A2B',
+                }}
+              >
+                Bat
+              </h3>
+              <p
+                className="couple-fullname mt-2 fade-in-text"
+              >
+                นางสาวสุพัตรา กิ่งแก้ว
+              </p>
+            </div>
           </div>
         </div>
       );
@@ -446,14 +628,14 @@
       const [currentIndex, setCurrentIndex] = React.useState(0);
 
       const allImages = [
-        'https://via.placeholder.com/400x600?text=Large+Photo+1',
-        'https://via.placeholder.com/400x600?text=Large+Photo+2',
-        'https://via.placeholder.com/400x600?text=Large+Photo+3',
-        'https://via.placeholder.com/200x150?text=Small+Photo+1',
-        'https://via.placeholder.com/200x150?text=Small+Photo+2',
-        'https://via.placeholder.com/200x150?text=Small+Photo+3',
-        'https://via.placeholder.com/200x150?text=Small+Photo+4',
-        'https://via.placeholder.com/200x150?text=Small+Photo+5',
+        'https://picsum.photos/400/600?random=5',
+        'https://picsum.photos/400/600?random=6',
+        'https://picsum.photos/400/600?random=7',
+        'https://picsum.photos/200/150?random=8',
+        'https://picsum.photos/200/150?random=9',
+        'https://picsum.photos/200/150?random=10',
+        'https://picsum.photos/200/150?random=11',
+        'https://picsum.photos/200/150?random=12',
       ];
 
       const largeImages = allImages.slice(0, 3);
@@ -488,26 +670,6 @@
         setSelectedImage(allImages[prevIndex]);
       };
 
-      React.useEffect(() => {
-        particlesJS('particles-js', {
-          particles: {
-            number: { value: 30, density: { enable: true, value_area: 800 } },
-            color: { value: '#F4B6C2' },
-            shape: { type: 'image', image: { src: 'https://www.pngall.com/wp-content/uploads/2016/07/Heart-PNG-Image.png', width: 32, height: 32 } },
-            opacity: { value: 0.7, random: true },
-            size: { value: 10, random: true },
-            line_linked: { enable: false },
-            move: { enable: true, speed: 0.5, direction: 'none', random: true, straight: false, out_mode: 'out' },
-          },
-          interactivity: {
-            detect_on: 'canvas',
-            events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
-            modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } },
-          },
-          retina_detect: true,
-        });
-      }, []);
-
       return (
         <div className="w-full max-w-5xl relative">
           <div id="particles-js"></div>
@@ -519,12 +681,13 @@
                     src={image}
                     alt={`ภาพใหญ่ที่ ${index + 1}`}
                     className="w-full"
+                    onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'}
                   />
                 </div>
               ))}
             </div>
             <h2
-              className="text-6xl md:text-8xl font-bold my-8 text-center"
+              className="text-6xl md:text-8xl font-bold my-8 text-center fade-in-text"
               style={{
                 fontFamily: "'Dancing Script', cursive",
                 color: '#A0A0A0',
@@ -539,6 +702,7 @@
                     src={image}
                     alt={`ภาพเล็กที่ ${index + 1}`}
                     className="w-full"
+                    onError={(e) => e.target.src = 'https://picsum.photos/200/150?random=0'}
                   />
                 </div>
               ))}
@@ -556,8 +720,48 @@
       );
     };
 
+    const ErrorBoundary = ({ children }) => {
+      const [hasError, setHasError] = React.useState(false);
+      const [errorInfo, setErrorInfo] = React.useState(null);
+
+      React.useEffect(() => {
+        const errorHandler = (error) => {
+          console.error('Error caught by ErrorBoundary:', error);
+          setHasError(true);
+          setErrorInfo(error.message || 'Unknown error');
+        };
+        window.addEventListener('error', errorHandler);
+        return () => window.removeEventListener('error', errorHandler);
+      }, []);
+
+      if (hasError) {
+        return (
+          <div className="text-center p-8">
+            <h1 className="text-2xl font-bold mb-4" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#4A4A4A' }}>
+              เกิดข้อผิดพลาด
+            </h1>
+            <p className="text-lg mb-4" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#A0A0A0' }}>
+              กรุณารีเฟรชหน้าหรือลองใหม่ในภายหลัง
+            </p>
+            <p className="text-sm text-gray-600">
+              รายละเอียดข้อผิดพลาด: {errorInfo || 'ไม่ทราบสาเหตุ'}
+            </p>
+            <button
+              className="mt-4 px-6 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect"
+              onClick={() => window.location.reload()}
+              style={{ fontFamily: "'Noto Serif Thai', serif", fontWeight: 400, color: '#4A4A4A' }}
+            >
+              รีเฟรชหน้า
+            </button>
+          </div>
+        );
+      }
+      return children;
+    };
+
     const App = () => {
       const [showBackToTop, setShowBackToTop] = React.useState(false);
+      const [heartClicked, setHeartClicked] = React.useState(false);
 
       React.useEffect(() => {
         const sections = document.querySelectorAll('.section');
@@ -584,9 +788,61 @@
 
         window.addEventListener('scroll', handleScroll);
 
+        const initializeParticles = () => {
+          if (window.particlesJS) {
+            const starsElement = document.getElementById('stars-js');
+            const particlesElement = document.getElementById('particles-js');
+            
+            if (starsElement) {
+              window.particlesJS('stars-js', {
+                particles: {
+                  number: { value: 20, density: { enable: true, value_area: 800 } },
+                  color: { value: '#F4B6C2' },
+                  shape: { type: 'star' },
+                  opacity: { value: 0.5, random: true },
+                  size: { value: 3, random: true },
+                  line_linked: { enable: false },
+                  move: { enable: true, speed: 0.3, direction: 'none', random: true, straight: false, out_mode: 'out' },
+                },
+                interactivity: {
+                  detect_on: 'canvas',
+                  events: { onhover: { enable: false }, onclick: { enable: false }, resize: true },
+                },
+                retina_detect: true,
+              });
+            }
+
+            if (particlesElement) {
+              window.particlesJS('particles-js', {
+                particles: {
+                  number: { value: 30, density: { enable: true, value_area: 800 } },
+                  color: { value: '#F4B6C2' },
+                  shape: { type: 'image', image: { src: 'https://www.pngall.com/wp-content/uploads/2016/07/Heart-PNG-Image.png', width: 32, height: 32 } },
+                  opacity: { value: 0.7, random: true },
+                  size: { value: 10, random: true },
+                  line_linked: { enable: false },
+                  move: { enable: true, speed: 0.5, direction: 'none', random: true, straight: false, out_mode: 'out' },
+                },
+                interactivity: {
+                  detect_on: 'canvas',
+                  events: { onhover: { enable: true, mode: 'repulse' }, onclick: { enable: true, mode: 'push' }, resize: true },
+                  modes: { repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 2 } },
+                },
+                retina_detect: true,
+              });
+            }
+          } else {
+            console.warn('particlesJS not loaded');
+          }
+        };
+
+        // Delay initialization to ensure particles.js is loaded
+        const timeout = setTimeout(initializeParticles, 1000);
+
         return () => {
           sections.forEach((section) => observer.unobserve(section));
           window.removeEventListener('scroll', handleScroll);
+          clearTimeout(timeout);
         };
       }, []);
 
@@ -594,307 +850,322 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       };
 
+      const handleRsvpClick = () => {
+        setHeartClicked(true);
+        setTimeout(() => setHeartClicked(false), 1000);
+      };
+
       return (
-        <div className="flex flex-col items-center justify-center bg-gray-100">
-          <button
-            className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
-            onClick={scrollToTop}
-            style={{
-              fontFamily: "'Noto Serif Thai', serif",
-            }}
-          >
-            ↑
-          </button>
-
-          <div className="section w-full flex flex-col md:flex-row items-center justify-center">
-            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
-              <div
-                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
-                style={{
-                  backgroundImage: `url('imgs/first.jpg')`,
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                }}
-              ></div>
-            </div>
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
-              <h1
-                className="text-6xl md:text-8xl font-bold mb-4 fade-in-up"
-                style={{
-                  fontFamily: "'Dancing Script', cursive",
-                  color: '#8B5A2B',
-                }}
-              >
-                Nat & Bat
-              </h1>
-              <p
-                className="text-2xl md:text-3xl font-light mb-6 fade-in-up-delay"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#4A4A4A',
-                }}
-              >
-                New Chapter Begins
-              </p>
-              <div className="flex items-center justify-center mb-6">
-                <hr className="w-24 border-gray-400" />
-                <p
-                  className="mx-4 text-lg md:text-xl"
-                  style={{
-                    fontFamily: "'Noto Serif Thai', serif",
-                    fontWeight: 300,
-                    color: '#A0A0A0',
-                  }}
-                >
-                  SAVE THE DATE
-                </p>
-                <hr className="w-24 border-gray-400" />
-              </div>
-              <h2
-                className="text-4xl md:text-5xl font-bold mb-8"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 700,
-                  color: '#F4B6C2',
-                }}
-              >
-                26 กรกฎาคม 2568
-              </h2>
-              <p
-                className="text-lg md:text-xl font-light max-w-2xl mx-auto"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                ขอเรียนเชิญท่านร่วมเป็นเกียรติในพิธีสมรสของเรา และร่วมเฉลิมฉลองความรักอันงดงาม โปรดอย่าพลาดโอกาสพบปะและร่วมยินดีในวันสำคัญของเรา
-              </p>
-            </div>
-          </div>
-
-          <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
-              <div className="flex items-center justify-center mb-4">
-                <hr className="w-24 border-gray-400" />
-                <p
-                  className="mx-4 text-2xl md:text-3xl"
-                  style={{
-                    fontFamily: "'Noto Serif Thai', serif",
-                    fontWeight: 300,
-                    color: '#A0A0A0',
-                  }}
-                >
-                  วันเสาร์
-                </p>
-                <hr className="w-24 border-gray-400" />
-              </div>
-              <h2
-                className="text-3xl md:text-4xl font-bold mb-4"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 700,
-                  color: '#F4B6C2',
-                }}
-              >
-                26 กรกฎาคม 2568
-              </h2>
-              <p
-                className="text-lg md:text-xl font-light mb-8"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                ขอเชิญร่วมเฉลิมฉลองความรักและการเริ่มต้นชีวิตคู่ของเรา นับถอยหลังสู่พิธีใน...
-              </p>
-              <CountdownTimer />
-            </div>
-            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
-              <div
-                className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
-                style={{
-                  backgroundImage: `url('-----------')`,  //รูปที่2
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                }}
-              ></div>
-            </div>
-          </div>
-
-          <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
-            <div className="flex items-center justify-center mb-4">
-              <hr className="w-24 border-gray-400" />
-              <p
-                className="mx-4 text-2xl md:text-3xl"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                ช่วงเวลาสุดพิเศษ
-              </p>
-              <hr className="w-24 border-gray-400" />
-            </div>
-            <h2
-              className="text-3xl md:text-4xl font-bold mb-8"
+        <ErrorBoundary>
+          <div className="flex flex-col items-center justify-center bg-gray-100">
+            <button
+              className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
+              onClick={scrollToTop}
               style={{
                 fontFamily: "'Noto Serif Thai', serif",
-                fontWeight: 700,
-                color: '#8B5A2B',
               }}
             >
-              NAT & BAT
-            </h2>
-            <Slider />
-          </div>
+              ↑
+            </button>
 
-          <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
-              <div className="flex items-center justify-center mb-4">
-                <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.243l-4.243-4.243m0 0l-4.243 4.243m4.243-4.243l4.243-4.243m-4.243 4.243l-4.243-4.243M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
-                </svg>
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center relative">
+              <div id="stars-js"></div>
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+                <div
+                  className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
+                  style={{
+                    backgroundImage: `url('imgs/first.jpg')`,
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  }}
+                ></div>
+              </div>
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+                <h1
+                  className="text-6xl md:text-8xl font-bold mb-4 fade-in-up"
+                  style={{
+                    fontFamily: "'Dancing Script', cursive",
+                    color: '#8B5A2B',
+                  }}
+                >
+                  Nat & Bat
+                </h1>
                 <p
-                  className="text-2xl md:text-3xl"
+                  className="text-2xl md:text-3xl font-light mb-6 fade-in-up-delay"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#4A4A4A',
+                  }}
+                >
+                  New Chapter Begins
+                </p>
+                <div className="flex items-center justify-center mb-6">
+                  <hr className="w-24 border-gray-400" />
+                  <p
+                    className="mx-4 text-lg md:text-xl fade-in-text"
+                    style={{
+                      fontFamily: "'Noto Serif Thai', serif",
+                      fontWeight: 300,
+                      color: '#A0A0A0',
+                    }}
+                  >
+                    SAVE THE DATE
+                  </p>
+                  <hr className="w-24 border-gray-400" />
+                </div>
+                <h2
+                  className="text-4xl md:text-5xl font-bold mb-8 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 700,
+                    color: '#F4B6C2',
+                  }}
+                >
+                  26 กรกฎาคม 2568
+                </h2>
+                <p
+                  className="text-lg md:text-xl font-light max-w-2xl mx-auto fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
                     color: '#A0A0A0',
                   }}
                 >
-                  สถานที่จัดงาน
+                  ขอเรียนเชิญท่านร่วมเป็นเกียรติในพิธีสมรสของเรา และร่วมเฉลิมฉลองความรักอันงดงาม โปรดอย่าพลาดโอกาสพบปะและร่วมยินดีในวันสำคัญของเรา
                 </p>
+                <div className="scroll-indicator">↓</div>
+              </div>
+            </div>
+
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
+              <CoupleIntro />
+            </div>
+
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+                <div className="flex items-center justify-center mb-4">
+                  <hr className="w-24 border-gray-400" />
+                  <p
+                    className="mx-4 text-2xl md:text-3xl fade-in-text"
+                    style={{
+                      fontFamily: "'Noto Serif Thai', serif",
+                      fontWeight: 300,
+                      color: '#A0A0A0',
+                    }}
+                  >
+                    วันเสาร์
+                  </p>
+                  <hr className="w-24 border-gray-400" />
+                </div>
+                <h2
+                  className="text-3xl md:text-4xl font-bold mb-4 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 700,
+                    color: '#F4B6C2',
+                  }}
+                >
+                  26 กรกฎาคม 2568
+                </h2>
+                <p
+                  className="text-lg md:text-xl font-light mb-8 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  ขอเชิญร่วมเฉลิมฉลองความรักและการเริ่มต้นชีวิตคู่ของเรา นับถอยหลังสู่พิธีใน...
+                </p>
+                <CountdownTimer />
+              </div>
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+                <div
+                  className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
+                  style={{
+                    backgroundImage: `url('https://picsum.photos/800/600?random=14')`,
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
+              <div className="flex items-center justify-center mb-4">
+                <hr className="w-24 border-gray-400" />
+                <p
+                  className="mx-4 text-2xl md:text-3xl fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  ช่วงเวลาสุดพิเศษ
+                </p>
+                <hr className="w-24 border-gray-400" />
               </div>
               <h2
-                className="text-3xl md:text-4xl font-bold mb-4"
+                className="text-3xl md:text-4xl font-bold mb-8 fade-in-text"
                 style={{
                   fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
-                  color: '#4A4A4A',
-                }}
-              >
-                xxx
-              </h2>
-              <p
-                className="text-lg md:text-xl font-light mb-8"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                ต.หานโพธิ์ อ.เขาชัยสน จ.พัทลุง
-              </p>
-              <a
-                href="https://www.google.com/maps/dir/?api=1&destination=7.5188034309114995,100.16880534483941"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 400,
-                  color: '#4A4A4A',
-                }}
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-                เส้นทางไปงาน
-              </a>
-            </div>
-            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
-              <iframe
-                className="w-full h-full rounded-lg shadow-xl"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.7766826181745!2d100.16880534483941!3d7.5188034309114995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2zN8KwMzEnMDcuNyJOIDEwMMKwMTAnMDcuNyJF!5e0!3m2!1sen!2sth!4v1634567890123!5m2!1sen!2sth"
-                allowFullScreen=""
-                loading="lazy"
-                style={{
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                }}
-              ></iframe>
-            </div>
-          </div>
-
-          <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#E8F0EF]">
-            <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
-              <div
-                className="w-full h-full bg-cover bg-center rounded-tl-[50%] rounded-tr-[50%] md:rounded-tl-[50%] md:rounded-bl-[50%] shadow-xl"
-                style={{
-                  backgroundImage: `url('imgs/Ai_gen.png')`,
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-                }}
-              ></div>
-            </div>
-            <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
-              <h1
-                className="text-6xl md:text-8xl font-bold mb-4"
-                style={{
-                  fontFamily: "'Dancing Script', cursive",
                   color: '#8B5A2B',
+                  fontSize: 'clamp(2rem, 5vw, 3rem)',
                 }}
               >
-                Nat & Bat
-              </h1>
-              <p
-                className="text-lg md:text-xl font-light mb-6"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                (ตอบรับการเข้าร่วมงาน)
-              </p>
-              <div className="flex items-center justify-center mb-6">
-                <hr className="w-24 border-gray-400" />
-                <div className="mx-4 text-gray-400">◇</div>
-                <hr className="w-24 border-gray-400" />
+                NAT & BAT
+              </h2>
+              <Slider />
+            </div>
+
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+                <div className="flex items-center justify-center mb-4">
+                  <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.243l-4.243-4.243m0 0l-4.243 4.243m4.243-4.243l4.243-4.243m-4.243 4.243l-4.243-4.243M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
+                  </svg>
+                  <p
+                    className="text-2xl md:text-3xl fade-in-text"
+                    style={{
+                      fontFamily: "'Noto Serif Thai', serif",
+                      fontWeight: 300,
+                      color: '#A0A0A0',
+                    }}
+                  >
+                    สถานที่จัดงาน
+                  </p>
+                </div>
+                <h2
+                  className="text-3xl md:text-4xl font-bold mb-4 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 700,
+                    color: '#4A4A4A',
+                  }}
+                >
+                  ณ บ้านเจ้าสาว
+                </h2>
+                <p
+                  className="text-lg md:text-xl font-light mb-8 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  ต.หานโพธิ์ อ.เขาชัยสน จ.พัทลุง
+                </p>
+                <a
+                  href="https://www.google.com/maps/dir/?api=1&destination=7.5188034309114995,100.16880534483941"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 400,
+                    color: '#4A4A4A',
+                  }}
+                >
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                  เส้นทางไปงาน
+                </a>
               </div>
-              <p
-                className="text-lg md:text-xl font-light mb-6"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                กรุณาคลิกปุ่มด้านล่างเพื่อตอบรับและส่งคำอวยพรถึงบ่าวสาว
-              </p>
-              <a
-                href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md hover:bg-gray-300 transition duration-300"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 400,
-                  color: '#4A4A4A',
-                }}
-              >
-                ส่งคำตอบรับ
-                <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </a>
-              <p
-                className="text-lg md:text-xl font-light mt-6"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  fontWeight: 300,
-                  color: '#A0A0A0',
-                }}
-              >
-                กรุณาตอบรับภายในวันที่ xx กรกฎาคม 2568
-              </p>
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+                <iframe
+                  className="w-full h-full rounded-lg shadow-xl"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.7766826181745!2d100.16880534483941!3d7.5188034309114995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2zN8KwMzEnMDcuNyJOIDEwMMKwMTAnMDcuNyJF!5e0!3m2!1sen!2sth!4v1634567890123!5m2!1sen!2sth"
+                  allowFullScreen=""
+                  loading="lazy"
+                  style={{
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  }}
+                ></iframe>
+              </div>
+            </div>
+
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+                <div
+                  className="w-full h-full bg-cover bg-center rounded-tl-[50%] rounded-tr-[50%] md:rounded-tl-[50%] md:rounded-bl-[50%] shadow-xl"
+                  style={{
+                    backgroundImage: `url('imgs/Ai_gen.png')`,
+                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                  }}
+                ></div>
+              </div>
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
+                <h1
+                  className="text-6xl md:text-8xl font-bold mb-4 fade-in-text"
+                  style={{
+                    fontFamily: "'Dancing Script', cursive",
+                    color: '#8B5A2B',
+                  }}
+                >
+                  Nat & Bat
+                </h1>
+                <p
+                  className="text-lg md:text-xl font-light mb-6 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  (ตอบรับการเข้าร่วมงาน)
+                </p>
+                <div className="flex items-center justify-center mb-6">
+                  <hr className="w-24 border-gray-400" />
+                  <div className="mx-4 text-gray-400">◇</div>
+                  <hr className="w-24 border-gray-400" />
+                </div>
+                <p
+                  className="text-lg md:text-xl font-light mb-6 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  กรุณาคลิกปุ่มด้านล่างเพื่อตอบรับและส่งคำอวยพรถึงบ่าวสาว
+                </p>
+                <a
+                  href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 400,
+                    color: '#4A4A4A',
+                  }}
+                  onClick={handleRsvpClick}
+                >
+                  ส่งคำตอบรับ
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+                <p
+                  className="text-lg md:text-xl font-light mt-6 fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  กรุณาตอบรับภายในวันที่ -- กรกฎาคม 2568
+                </p>
+              </div>
+            </div>
+
+            <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
+              <Gallery />
             </div>
           </div>
-
-          <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
-            <Gallery />
-          </div>
-        </div>
+        </ErrorBoundary>
       );
     };
 
