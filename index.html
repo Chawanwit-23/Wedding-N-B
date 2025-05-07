@@ -15,6 +15,8 @@
     html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      height: 100%;
       overflow-x: hidden;
       scroll-behavior: smooth;
     }
@@ -57,7 +59,7 @@
     .slide img {
       width: 100%;
       height: auto;
-      max-height: 50vh;
+      max-height: 40vh;
       object-fit: cover;
       border-radius: 8px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -101,8 +103,8 @@
       animation: fadeIn 0.3s ease-in-out;
     }
     .lightbox img {
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 95%;
+      max-height: 95%;
       border-radius: 8px;
       animation: zoomIn 0.3s ease-in-out;
     }
@@ -328,7 +330,7 @@
     @media (max-width: 640px) {
       .section {
         min-height: 100vh;
-        padding: 24px 16px;
+        padding: 16px;
       }
       .section > div {
         flex-direction: column !important;
@@ -374,7 +376,7 @@
     @media (min-width: 641px) and (max-width: 1024px) {
       .section {
         min-height: 100vh;
-        padding: 48px 24px;
+        padding: 24px;
       }
       .section > div {
         flex-direction: column;
@@ -618,7 +620,7 @@
                   color: '#8B5A2B',
                 }}
               >
-              สถาปนิก
+                สถาปนิก
               </p>
               <p
                 className="couple-fullname fade-in-text"
@@ -627,7 +629,7 @@
                   color: '#8B5A2B',
                 }}
               >
-              Architecture
+                Architecture
               </p>
             </div>
             <div className="couple-item">
@@ -658,7 +660,7 @@
                   color: '#8B5A2B',
                 }}
               >
-              พยาบาล
+                พยาบาล
               </p>
               <p
                 className="couple-fullname fade-in-text"
@@ -667,7 +669,7 @@
                   color: '#8B5A2B',
                 }}
               >
-              Nurse
+                Nurse
               </p>
             </div>
           </div>
@@ -989,7 +991,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-4 md:p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-4 md:p-8">
               <CoupleIntro />
             </div>
 
@@ -1042,7 +1044,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-4 md:p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-4 md:p-8">
               <div className="flex items-center justify-center mb-4">
                 <hr className="w-16 md:w-24 border-gray-400" />
                 <p
@@ -1063,6 +1065,7 @@
                   fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
                   color: '#8B5A2B',
+                  fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
                 }}
               >
                 NAT & BAT
@@ -1137,7 +1140,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#E8F0EF]">
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
               <div className="w-full md:w-1/2 h-40vh md:h-screen flex items-center justify-center p-4 md:p-8">
                 <div
                   className="w-full h-full bg-cover bg-center rounded-tl-[40%] rounded-tr-[40%] md:rounded-tl-[40%] md:rounded-bl-[40%] shadow-xl"
@@ -1183,7 +1186,7 @@
                   กรุณาคลิกปุ่มด้านล่างเพื่อตอบรับและส่งคำอวยพรถึงบ่าวสาว
                 </p>
                 <a
-                  href="https://forms.gle/wedding-rsvp-nut-bat"
+                  href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
@@ -1207,7 +1210,7 @@
                     color: '#A0A0A0',
                   }}
                 >
-                  กรุณาตอบรับภายในวันที่ 15 กรกฎาคม 2568
+                  กรุณาตอบรับภายในวันที่ -- กรกฎาคม 2568
                 </p>
               </div>
             </div>
