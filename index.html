@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NAT & BAT</title>
   <script src="https://cdn.jsdelivr.net/npm/react@18.3.1/umd/react.development.js" crossorigin></script>
   <script src="https://cdn.jsdelivr.net/npm/react-dom@18.3.1/umd/react-dom.development.js" crossorigin></script>
@@ -12,12 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow-x: hidden;
+    html {
       scroll-behavior: smooth;
     }
     .section {
@@ -25,13 +20,10 @@
       transform: translateY(20px);
       transition: opacity 0.6s ease-out, transform 0.6s ease-out;
       min-height: 100vh;
-      width: 100%;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      align-items: center;
       position: relative;
-      box-sizing: border-box;
     }
     .section.visible {
       opacity: 1;
@@ -40,7 +32,7 @@
     .slider-container {
       position: relative;
       width: 100%;
-      max-width: 100%;
+      max-width: 1280px;
       overflow: hidden;
     }
     .slider {
@@ -48,7 +40,7 @@
       transition: transform 0.5s ease-in-out;
     }
     .slide {
-      flex: 0 0 100%;
+      flex: 0 0 25%;
       padding: 0 8px;
       transform: scale(1);
       transition: transform 0.3s ease;
@@ -58,13 +50,10 @@
     }
     .slide img {
       width: 100%;
-      height: auto;
-      max-height: 40vh;
-      min-height: 100px;
+      height: 384px;
       object-fit: cover;
       border-radius: 8px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .dots {
       display: flex;
@@ -84,10 +73,6 @@
     }
     .gallery-large img, .gallery-small img {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
-      width: 100%;
-      height: auto;
-      min-height: 80px;
-      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .gallery-large img:hover, .gallery-small img:hover {
       transform: scale(1.05);
@@ -107,12 +92,10 @@
       animation: fadeIn 0.3s ease-in-out;
     }
     .lightbox img {
-      max-width: 95%;
-      max-height: 95%;
+      max-width: 90%;
+      max-height: 90%;
       border-radius: 8px;
       animation: zoomIn 0.3s ease-in-out;
-      min-height: 100px;
-      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .lightbox.fade-out {
       animation: fadeOut 0.3s ease-in-out;
@@ -172,8 +155,6 @@
       position: absolute;
       width: 100%;
       height: 100%;
-      top: 0;
-      left: 0;
       z-index: 0;
     }
     .fade-in-up {
@@ -194,8 +175,6 @@
       background-attachment: fixed;
       background-position: center;
       background-size: cover;
-      width: 100%;
-      height: 100%;
     }
     .back-to-top {
       position: fixed;
@@ -266,31 +245,23 @@
     }
     .couple-container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: center;
-      align-items: center;
-      gap: 16px;
-      width: 100%;
-      max-width: 100%;
-      padding: 0 16px;
+      gap: 32px;
     }
     .couple-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
-      width: 100%;
-      max-width: 300px;
     }
     .couple-item img {
-      width: 120px;
-      height: 120px;
+      width: 200px;
+      height: 200px;
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
-      min-height: 80px;
-      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .couple-item img:hover {
       transform: scale(1.1);
@@ -299,15 +270,59 @@
       font-family: 'Noto Serif Thai', serif;
       font-weight: 300;
       color: #A0A0A0;
-      font-size: 0.875rem;
+      font-size: 1.25rem;
     }
-    @media (min-width: 641px) {
-      .couple-container {
-        flex-direction: row;
-        gap: 24px;
+    @media (max-width: 640px) {
+      .section {
+        min-height: auto;
+        padding: 40px 16px;
       }
-      .couple-item {
-        max-width: 400px;
+      .section > div {
+        flex-direction: column !important;
+      }
+      .section > div > div {
+        width: 100% !important;
+        margin-bottom: 20px;
+      }
+      .section .w-full.h-96 {
+        height: 200px;
+      }
+      h1 {
+        font-size: 2.5rem !important;
+      }
+      h2 {
+        font-size: 1.5rem !important;
+      }
+      p {
+        font-size: 1rem !important;
+      }
+      .countdown-number {
+        font-size: 1.5rem !important;
+        padding: 8px !important;
+      }
+      .slide {
+        flex: 0 0 100%;
+      }
+      .slide img {
+        height: 200px;
+      }
+      .gallery-large img {
+        aspect-ratio: 4 / 3;
+      }
+      .gallery-small {
+        min-width: 120px !important;
+        max-width: 120px !important;
+        margin: 4px;
+      }
+      .parallax {
+        background-attachment: scroll;
+      }
+      .scroll-indicator {
+        font-size: 18px;
+      }
+      .c Couple-container {
+        flex-direction: column;
+        gap: 16px;
       }
       .couple-item img {
         width: 150px;
@@ -317,114 +332,66 @@
         font-size: 1rem;
       }
     }
-    @media (min-width: 1025px) {
-      .section {
-        padding: 80px 32px;
-      }
-      .couple-item img {
-        width: 200px;
-        height: 200px;
-      }
-      .couple-fullname {
-        font-size: 1.25rem;
-      }
-      .slide {
-        flex: 0 0 25%;
-      }
-      .slide img {
-        max-height: 60vh;
-      }
-    }
-    @media (max-width: 640px) {
-      .section {
-        min-height: 100vh;
-        padding: 16px;
-      }
-      .section > div {
-        flex-direction: column !important;
-      }
-      .section > div > div {
-        width: 100% !important;
-        margin-bottom: 16px;
-      }
-      .section .w-full.h-40vh {
-        height: 40vh;
-      }
-      h1 {
-        font-size: 2rem !important;
-      }
-      h2 {
-        font-size: 1.25rem !important;
-      }
-      p {
-        font-size: 0.875rem !important;
-      }
-      .countdown-number {
-        font-size: 1.25rem !important;
-        padding: 6px !important;
-      }
-      .slide img {
-        max-height: 40vh;
-      }
-      .gallery-large img {
-        aspect-ratio: 4 / 3;
-      }
-      .gallery-small {
-        min-width: 100px !important;
-        max-width: 100px !important;
-        margin: 4px;
-      }
-      .parallax {
-        background-attachment: scroll;
-      }
-      .scroll-indicator {
-        font-size: 18px;
-      }
-    }
     @media (min-width: 641px) and (max-width: 1024px) {
       .section {
-        min-height: 100vh;
-        padding: 24px;
+        min-height: auto;
+        padding: 60px 24px;
       }
       .section > div {
         flex-direction: column;
       }
       .section > div > div {
         width: 100% !important;
-        margin-bottom: 24px;
+        margin-bottom: 30px;
       }
-      .section .w-full.h-40vh {
-        height: 50vh;
+      .section .w-full.h-96 {
+        height: 300px;
       }
       h1 {
-        font-size: 3rem !important;
+        font-size: 4rem !important;
       }
       h2 {
-        font-size: 1.75rem !important;
+        font-size: 2rem !important;
       }
       p {
-        font-size: 1rem !important;
+        font-size: 1.2rem !important;
       }
       .countdown-number {
-        font-size: 1.75rem !important;
-        padding: 10px !important;
+        font-size: 2rem !important;
+        padding: 12px !important;
       }
       .slide {
         flex: 0 0 50%;
       }
       .slide img {
-        max-height: 50vh;
+        height: 300px;
       }
       .gallery-large img {
         aspect-ratio: 3 / 4;
       }
       .gallery-small {
-        min-width: 120px !important;
-        max-width: 120px !important;
-        margin: 6px;
+        min-width: 150px !important;
+        max-width: 150px !important;
+        margin: 8px;
       }
       .parallax {
         background-attachment: scroll;
+      }
+      .couple-container {
+        gap: 24px;
+      }
+      .couple-item img {
+        width: 180px;
+        height: 180px;
+      }
+      .couple-fullname {
+        font-size: 1.125rem;
+      }
+    }
+    @media (min-width: 1025px) {
+      .section {
+        min-height: 100vh;
+        padding: 80px 32px;
       }
     }
     @keyframes fadeIn {
@@ -511,11 +478,11 @@
       }, []);
 
       return (
-        <div className="grid grid-cols-4 gap-2 w-full max-w-md">
+        <div className="grid grid-cols-4 gap-4">
           {['days', 'hours', 'minutes', 'seconds'].map((unit) => (
             <div key={unit} className="text-center">
               <div
-                className={`bg-gray-200 text-gray-800 text-3xl md:text-4xl font-semibold rounded-lg p-3 countdown-number ${changed[unit] ? 'active' : ''}`}
+                className={`bg-gray-200 text-gray-800 text-4xl md:text-5xl font-semibold rounded-lg p-4 countdown-number ${changed[unit] ? 'active' : ''}`}
                 style={{
                   fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
@@ -525,7 +492,7 @@
                 {String(timeLeft[unit]).padStart(2, '0')}
               </div>
               <p
-                className="text-gray-600 mt-2 fade-in-text text-sm md:text-base"
+                className="text-gray-600 mt-2 fade-in-text"
                 style={{
                   fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 300,
@@ -543,9 +510,10 @@
     const Slider = () => {
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const images = [
-        'https://picsum.photos/300/450?random=1',
-        'https://picsum.photos/300/450?random=2',
-        'https://picsum.photos/300/450?random=3',
+        'https://picsum.photos/400/600?random=1',
+        'https://picsum.photos/400/600?random=2',
+        'https://picsum.photos/400/600?random=3',
+        'https://picsum.photos/400/600?random=4',
       ];
 
       React.useEffect(() => {
@@ -556,23 +524,21 @@
       }, [images.length]);
 
       const getTransformValue = () => {
-        return `translateX(-${currentIndex * 100}%)`;
+        if (window.innerWidth <= 640) {
+          return `translateX(-${currentIndex * 100}%)`;
+        } else if (window.innerWidth <= 1024) {
+          return `translateX(-${currentIndex * 50}%)`;
+        } else {
+          return `translateX(-${currentIndex * 25}%)`;
+        }
       };
 
       return (
-        <div className="slider-container w-full">
+        <div className="slider-container">
           <div className="slider" style={{ transform: getTransformValue() }}>
             {images.map((image, index) => (
               <div key={index} className={`slide ${currentIndex === index ? 'active' : ''}`}>
-                <img
-                  src={image}
-                  alt={`ภาพที่ ${index + 1}`}
-                  loading="lazy"
-                  onError={(e) => {
-                    console.warn(`Failed to load image: ${image}`);
-                    e.target.src = 'https://via.placeholder.com/300x450.png?text=Image+Failed';
-                  }}
-                />
+                <img src={image} alt={`ภาพที่ ${index + 1}`} onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'} />
               </div>
             ))}
           </div>
@@ -591,11 +557,11 @@
 
     const CoupleIntro = () => {
       return (
-        <div className="w-full flex flex-col items-center justify-center p-4 md:p-8 text-center">
-          <div className="flex items-center justify-center mb-4 w-full max-w-md">
-            <hr className="w-16 md:w-24 border-gray-400" />
+        <div className="w-full flex flex-col items-center justify-center p-8 text-center">
+          <div className="flex items-center justify-center mb-4">
+            <hr className="w-24 border-gray-400" />
             <p
-              className="mx-4 text-xl md:text-2xl fade-in-text"
+              className="mx-4 text-2xl md:text-3xl fade-in-text"
               style={{
                 fontFamily: "'Noto Serif Thai', serif",
                 fontWeight: 300,
@@ -604,7 +570,7 @@
             >
               เจ้าบ่าว & เจ้าสาว
             </p>
-            <hr className="w-16 md:w-24 border-gray-400" />
+            <hr className="w-24 border-gray-400" />
           </div>
           <div className="couple-container">
             <div className="couple-item">
@@ -612,14 +578,10 @@
                 src="imgs/groom.png"
                 alt="เจ้าบ่าว"
                 className="fade-in-up"
-                loading="lazy"
-                onError={(e) => {
-                  console.warn('Failed to load groom image');
-                  e.target.src = 'https://via.placeholder.com/150.png?text=Groom';
-                }}
+                onError={(e) => e.target.src = 'https://picsum.photos/200/200?random=0'}
               />
               <h3
-                className="text-2xl md:text-3xl font-bold mt-4 fade-in-text"
+                className="text-3xl md:text-4xl font-bold mt-4 fade-in-text"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: '#8B5A2B',
@@ -639,7 +601,7 @@
                   color: '#8B5A2B',
                 }}
               >
-                สถาปนิก
+              สถาปนิก
               </p>
               <p
                 className="couple-fullname fade-in-text"
@@ -648,7 +610,7 @@
                   color: '#8B5A2B',
                 }}
               >
-                Architecture
+              Architecture
               </p>
             </div>
             <div className="couple-item">
@@ -656,14 +618,10 @@
                 src="imgs/bride.png"
                 alt="เจ้าสาว"
                 className="fade-in-up"
-                loading="lazy"
-                onError={(e) => {
-                  console.warn('Failed to load bride image');
-                  e.target.src = 'https://via.placeholder.com/150.png?text=Bride';
-                }}
+                onError={(e) => e.target.src = 'https://picsum.photos/200/200?random=0'}
               />
               <h3
-                className="text-2xl md:text-3xl font-bold mt-4 fade-in-text"
+                className="text-3xl md:text-4xl font-bold mt-4 fade-in-text"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: '#8B5A2B',
@@ -683,7 +641,7 @@
                   color: '#8B5A2B',
                 }}
               >
-                พยาบาล
+              พยาบาล
               </p>
               <p
                 className="couple-fullname fade-in-text"
@@ -692,7 +650,7 @@
                   color: '#8B5A2B',
                 }}
               >
-                Nurse
+              Nurse
               </p>
             </div>
           </div>
@@ -706,14 +664,18 @@
       const [currentIndex, setCurrentIndex] = React.useState(0);
 
       const allImages = [
-        'https://picsum.photos/300/450?random=5',
-        'https://picsum.photos/300/450?random=6',
-        'https://picsum.photos/150/100?random=8',
-        'https://picsum.photos/150/100?random=9',
+        'https://picsum.photos/400/600?random=5',
+        'https://picsum.photos/400/600?random=6',
+        'https://picsum.photos/400/600?random=7',
+        'https://picsum.photos/200/150?random=8',
+        'https://picsum.photos/200/150?random=9',
+        'https://picsum.photos/200/150?random=10',
+        'https://picsum.photos/200/150?random=11',
+        'https://picsum.photos/200/150?random=12',
       ];
 
-      const largeImages = allImages.slice(0, 2);
-      const smallImages = allImages.slice(2);
+      const largeImages = allImages.slice(0, 3);
+      const smallImages = allImages.slice(3);
 
       const openLightbox = (image) => {
         setSelectedImage(image);
@@ -745,27 +707,23 @@
       };
 
       return (
-        <div className="w-full max-w-full relative px-4 md:px-8">
+        <div className="w-full max-w-5xl relative">
           <div id="particles-js"></div>
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row gap-4">
+            <div className="flex flex-col md:flex-row">
               {largeImages.map((image, index) => (
                 <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
                   <img
                     src={image}
                     alt={`ภาพใหญ่ที่ ${index + 1}`}
                     className="w-full"
-                    loading="lazy"
-                    onError={(e) => {
-                      console.warn(`Failed to load large gallery image: ${image}`);
-                      e.target.src = 'https://via.placeholder.com/300x450.png?text=Gallery+Image';
-                    }}
+                    onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'}
                   />
                 </div>
               ))}
             </div>
             <h2
-              className="text-4xl md:text-6xl font-bold my-6 md:my-8 text-center fade-in-text"
+              className="text-6xl md:text-8xl font-bold my-8 text-center fade-in-text"
               style={{
                 fontFamily: "'Dancing Script', cursive",
                 color: '#A0A0A0',
@@ -773,18 +731,14 @@
             >
               Special Gallery
             </h2>
-            <div className="flex flex-wrap justify-center gap-4">
+            <div className="flex flex-wrap justify-center">
               {smallImages.map((image, index) => (
-                <div key={index} className="cursor-pointer gallery-small min-w-[100px] max-w-[150px]" onClick={() => openLightbox(image)}>
+                <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
                   <img
                     src={image}
                     alt={`ภาพเล็กที่ ${index + 1}`}
                     className="w-full"
-                    loading="lazy"
-                    onError={(e) => {
-                      console.warn(`Failed to load small gallery image: ${image}`);
-                      e.target.src = 'https://via.placeholder.com/150x100.png?text=Gallery+Image';
-                    }}
+                    onError={(e) => e.target.src = 'https://picsum.photos/200/150?random=0'}
                   />
                 </div>
               ))}
@@ -794,14 +748,7 @@
                 <span className="lightbox-close" onClick={closeLightbox}>×</span>
                 <span className="lightbox-nav left" onClick={prevImage}>❮</span>
                 <span className="lightbox-nav right" onClick={nextImage}>❯</span>
-                <img
-                  src={selectedImage}
-                  alt="ภาพที่เลือก"
-                  onError={(e) => {
-                    console.warn(`Failed to load lightbox image: ${selectedImage}`);
-                    e.target.src = 'https://via.placeholder.com/300x450.png?text=Lightbox+Image';
-                  }}
-                />
+                <img src={selectedImage} alt="ภาพที่เลือก" />
               </div>
             )}
           </div>
@@ -825,7 +772,7 @@
 
       if (hasError) {
         return (
-          <div className="text-center p-8 w-full h-screen flex flex-col justify-center items-center">
+          <div className="text-center p-8">
             <h1 className="text-2xl font-bold mb-4" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#4A4A4A' }}>
               เกิดข้อผิดพลาด
             </h1>
@@ -925,6 +872,7 @@
           }
         };
 
+        // Delay initialization to ensure particles.js is loaded
         const timeout = setTimeout(initializeParticles, 1000);
 
         return () => {
@@ -945,7 +893,7 @@
 
       return (
         <ErrorBoundary>
-          <div className="flex flex-col items-center justify-center bg-gray-100 w-full min-h-screen">
+          <div className="flex flex-col items-center justify-center bg-gray-100">
             <button
               className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
               onClick={scrollToTop}
@@ -958,19 +906,18 @@
 
             <div className="section w-full flex flex-col md:flex-row items-center justify-center relative">
               <div id="stars-js"></div>
-              <div className="w-full md:w-1/2 h-40vh md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
                 <div
                   className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                   style={{
                     backgroundImage: `url('imgs/first.jpg')`,
-                    backgroundImage: `url('https://via.placeholder.com/300x450.png?text=First+Image')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
               </div>
-              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8 text-center">
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <h1
-                  className="text-4xl md:text-6xl font-bold mb-4 fade-in-up"
+                  className="text-6xl md:text-8xl font-bold mb-4 fade-in-up"
                   style={{
                     fontFamily: "'Dancing Script', cursive",
                     color: '#8B5A2B',
@@ -979,7 +926,7 @@
                   Nat & Bat
                 </h1>
                 <p
-                  className="text-xl md:text-2xl font-light mb-6 fade-in-up-delay"
+                  className="text-2xl md:text-3xl font-light mb-6 fade-in-up-delay"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -989,9 +936,9 @@
                   New Chapter Begins
                 </p>
                 <div className="flex items-center justify-center mb-6">
-                  <hr className="w-16 md:w-24 border-gray-400" />
+                  <hr className="w-24 border-gray-400" />
                   <p
-                    className="mx-4 text-base md:text-lg fade-in-text"
+                    className="mx-4 text-lg md:text-xl fade-in-text"
                     style={{
                       fontFamily: "'Noto Serif Thai', serif",
                       fontWeight: 300,
@@ -1000,10 +947,10 @@
                   >
                     SAVE THE DATE
                   </p>
-                  <hr className="w-16 md:w-24 border-gray-400" />
+                  <hr className="w-24 border-gray-400" />
                 </div>
                 <h2
-                  className="text-2xl md:text-4xl font-bold mb-6 fade-in-text"
+                  className="text-4xl md:text-5xl font-bold mb-8 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 700,
@@ -1013,7 +960,7 @@
                   26 กรกฎาคม 2568
                 </h2>
                 <p
-                  className="text-base md:text-lg font-light max-w-xl mx-auto fade-in-text"
+                  className="text-lg md:text-xl font-light max-w-2xl mx-auto fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1026,16 +973,16 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-4 md:p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
               <CoupleIntro />
             </div>
 
             <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
-              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8 text-center">
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <hr className="w-16 md:w-24 border-gray-400" />
+                  <hr className="w-24 border-gray-400" />
                   <p
-                    className="mx-4 text-xl md:text-2xl fade-in-text"
+                    className="mx-4 text-2xl md:text-3xl fade-in-text"
                     style={{
                       fontFamily: "'Noto Serif Thai', serif",
                       fontWeight: 300,
@@ -1044,10 +991,10 @@
                   >
                     วันเสาร์
                   </p>
-                  <hr className="w-16 md:w-24 border-gray-400" />
+                  <hr className="w-24 border-gray-400" />
                 </div>
                 <h2
-                  className="text-2xl md:text-3xl font-bold mb-4 fade-in-text"
+                  className="text-3xl md:text-4xl font-bold mb-4 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 700,
@@ -1057,7 +1004,7 @@
                   26 กรกฎาคม 2568
                 </h2>
                 <p
-                  className="text-base md:text-lg font-light mb-6 fade-in-text"
+                  className="text-lg md:text-xl font-light mb-8 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1068,23 +1015,22 @@
                 </p>
                 <CountdownTimer />
               </div>
-              <div className="w-full md:w-1/2 h-40vh md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
                 <div
                   className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                   style={{
-                    backgroundImage: `url('https://picsum.photos/300/450?random=14')`,
-                    backgroundImage: `url('https://via.placeholder.com/300x450.png?text=Countdown+Image')`,
+                    backgroundImage: `url('https://picsum.photos/800/600?random=14')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-4 md:p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
               <div className="flex items-center justify-center mb-4">
-                <hr className="w-16 md:w-24 border-gray-400" />
+                <hr className="w-24 border-gray-400" />
                 <p
-                  className="mx-4 text-xl md:text-2xl fade-in-text"
+                  className="mx-4 text-2xl md:text-3xl fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1093,15 +1039,15 @@
                 >
                   ช่วงเวลาสุดพิเศษ
                 </p>
-                <hr className="w-16 md:w-24 border-gray-400" />
+                <hr className="w-24 border-gray-400" />
               </div>
               <h2
-                className="text-2xl md:text-3xl font-bold mb-6 fade-in-text"
+                className="text-3xl md:text-4xl font-bold mb-8 fade-in-text"
                 style={{
                   fontFamily: "'Noto Serif Thai', serif",
                   fontWeight: 700,
                   color: '#8B5A2B',
-                  fontSize: 'clamp(1.5rem, 4vw, 2.5rem)',
+                  fontSize: 'clamp(2rem, 5vw, 3rem)',
                 }}
               >
                 NAT & BAT
@@ -1110,13 +1056,13 @@
             </div>
 
             <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
-              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8 text-center">
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <div className="flex items-center justify-center mb-4">
-                  <svg className="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.243l-4.243-4.243m0 0l-4.243 4.243m4.243-4.243l4.243-4.243m-4.243 4.243l-4.243-4.243M12 2a10 10 0 100 20 10 10 0 000-20z"></path>
                   </svg>
                   <p
-                    className="text-xl md:text-2xl fade-in-text"
+                    className="text-2xl md:text-3xl fade-in-text"
                     style={{
                       fontFamily: "'Noto Serif Thai', serif",
                       fontWeight: 300,
@@ -1127,7 +1073,7 @@
                   </p>
                 </div>
                 <h2
-                  className="text-2xl md:text-3xl font-bold mb-4 fade-in-text"
+                  className="text-3xl md:text-4xl font-bold mb-4 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 700,
@@ -1137,7 +1083,7 @@
                   ณ บ้านเจ้าสาว
                 </h2>
                 <p
-                  className="text-base md:text-lg font-light mb-6 fade-in-text"
+                  className="text-lg md:text-xl font-light mb-8 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1150,20 +1096,20 @@
                   href="https://www.google.com/maps/dir/?api=1&destination=7.5188034309114995,100.16880534483941"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect"
+                  className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 400,
                     color: '#4A4A4A',
                   }}
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                   เส้นทางไปงาน
                 </a>
               </div>
-              <div className="w-full md:w-1/2 h-40vh md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
                 <iframe
                   className="w-full h-full rounded-lg shadow-xl"
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3152.7766826181745!2d100.16880534483941!3d7.5188034309114995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0!2zN8KwMzEnMDcuNyJOIDEwMMKwMTAnMDcuNyJF!5e0!3m2!1sen!2sth!4v1634567890123!5m2!1sen!2sth"
@@ -1177,19 +1123,18 @@
             </div>
 
             <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
-              <div className="w-full md:w-1/2 h-40vh md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
                 <div
-                  className="w-full h-full bg-cover bg-center rounded-tl-[40%] rounded-tr-[40%] md:rounded-tl-[40%] md:rounded-bl-[40%] shadow-xl"
+                  className="w-full h-full bg-cover bg-center rounded-tl-[50%] rounded-tr-[50%] md:rounded-tl-[50%] md:rounded-bl-[50%] shadow-xl"
                   style={{
                     backgroundImage: `url('imgs/Ai_gen.png')`,
-                    backgroundImage: `url('https://via.placeholder.com/300x450.png?text=RSVP+Image')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
               </div>
-              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-4 md:p-8 text-center">
+              <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <h1
-                  className="text-4xl md:text-6xl font-bold mb-4 fade-in-text"
+                  className="text-6xl md:text-8xl font-bold mb-4 fade-in-text"
                   style={{
                     fontFamily: "'Dancing Script', cursive",
                     color: '#8B5A2B',
@@ -1198,7 +1143,7 @@
                   Nat & Bat
                 </h1>
                 <p
-                  className="text-base md:text-lg font-light mb-6 fade-in-text"
+                  className="text-lg md:text-xl font-light mb-6 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1208,12 +1153,12 @@
                   (ตอบรับการเข้าร่วมงาน)
                 </p>
                 <div className="flex items-center justify-center mb-6">
-                  <hr className="w-16 md:w-24 border-gray-400" />
+                  <hr className="w-24 border-gray-400" />
                   <div className="mx-4 text-gray-400">◇</div>
-                  <hr className="w-16 md:w-24 border-gray-400" />
+                  <hr className="w-24 border-gray-400" />
                 </div>
                 <p
-                  className="text-base md:text-lg font-light mb-6 fade-in-text"
+                  className="text-lg md:text-xl font-light mb-6 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1226,7 +1171,7 @@
                   href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center px-4 py-2 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
+                  className={`flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 400,
@@ -1235,12 +1180,12 @@
                   onClick={handleRsvpClick}
                 >
                   ส่งคำตอบรับ
-                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
                   </svg>
                 </a>
                 <p
-                  className="text-base md:text-lg font-light mt-6 fade-in-text"
+                  className="text-lg md:text-xl font-light mt-6 fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1252,7 +1197,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-4 md:p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
               <Gallery />
             </div>
           </div>
