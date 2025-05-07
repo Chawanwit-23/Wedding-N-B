@@ -60,9 +60,11 @@
       width: 100%;
       height: auto;
       max-height: 40vh;
+      min-height: 100px;
       object-fit: cover;
       border-radius: 8px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .dots {
       display: flex;
@@ -84,6 +86,8 @@
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       width: 100%;
       height: auto;
+      min-height: 80px;
+      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .gallery-large img:hover, .gallery-small img:hover {
       transform: scale(1.05);
@@ -107,6 +111,8 @@
       max-height: 95%;
       border-radius: 8px;
       animation: zoomIn 0.3s ease-in-out;
+      min-height: 100px;
+      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .lightbox.fade-out {
       animation: fadeOut 0.3s ease-in-out;
@@ -283,6 +289,8 @@
       object-fit: cover;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
+      min-height: 80px;
+      background: #f0f0f0 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-size="20" fill="#A0A0A0">Loading...</text></svg>') center center no-repeat;
     }
     .couple-item img:hover {
       transform: scale(1.1);
@@ -339,7 +347,7 @@
         width: 100% !important;
         margin-bottom: 16px;
       }
-      .section .w-full.h-96 {
+      .section .w-full.h-40vh {
         height: 40vh;
       }
       h1 {
@@ -385,7 +393,7 @@
         width: 100% !important;
         margin-bottom: 24px;
       }
-      .section .w-full.h-96 {
+      .section .w-full.h-40vh {
         height: 50vh;
       }
       h1 {
@@ -535,10 +543,9 @@
     const Slider = () => {
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const images = [
-        'https://picsum.photos/400/600?random=1',
-        'https://picsum.photos/400/600?random=2',
-        'https://picsum.photos/400/600?random=3',
-        'https://picsum.photos/400/600?random=4',
+        'https://picsum.photos/300/450?random=1',
+        'https://picsum.photos/300/450?random=2',
+        'https://picsum.photos/300/450?random=3',
       ];
 
       React.useEffect(() => {
@@ -557,7 +564,15 @@
           <div className="slider" style={{ transform: getTransformValue() }}>
             {images.map((image, index) => (
               <div key={index} className={`slide ${currentIndex === index ? 'active' : ''}`}>
-                <img src={image} alt={`ภาพที่ ${index + 1}`} onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'} />
+                <img
+                  src={image}
+                  alt={`ภาพที่ ${index + 1}`}
+                  loading="lazy"
+                  onError={(e) => {
+                    console.warn(`Failed to load image: ${image}`);
+                    e.target.src = 'https://via.placeholder.com/300x450.png?text=Image+Failed';
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -597,7 +612,11 @@
                 src="imgs/groom.png"
                 alt="เจ้าบ่าว"
                 className="fade-in-up"
-                onError={(e) => e.target.src = 'https://picsum.photos/200/200?random=0'}
+                loading="lazy"
+                onError={(e) => {
+                  console.warn('Failed to load groom image');
+                  e.target.src = 'https://via.placeholder.com/150.png?text=Groom';
+                }}
               />
               <h3
                 className="text-2xl md:text-3xl font-bold mt-4 fade-in-text"
@@ -637,7 +656,11 @@
                 src="imgs/bride.png"
                 alt="เจ้าสาว"
                 className="fade-in-up"
-                onError={(e) => e.target.src = 'https://picsum.photos/200/200?random=0'}
+                loading="lazy"
+                onError={(e) => {
+                  console.warn('Failed to load bride image');
+                  e.target.src = 'https://via.placeholder.com/150.png?text=Bride';
+                }}
               />
               <h3
                 className="text-2xl md:text-3xl font-bold mt-4 fade-in-text"
@@ -683,18 +706,14 @@
       const [currentIndex, setCurrentIndex] = React.useState(0);
 
       const allImages = [
-        'https://picsum.photos/400/600?random=5',
-        'https://picsum.photos/400/600?random=6',
-        'https://picsum.photos/400/600?random=7',
-        'https://picsum.photos/200/150?random=8',
-        'https://picsum.photos/200/150?random=9',
-        'https://picsum.photos/200/150?random=10',
-        'https://picsum.photos/200/150?random=11',
-        'https://picsum.photos/200/150?random=12',
+        'https://picsum.photos/300/450?random=5',
+        'https://picsum.photos/300/450?random=6',
+        'https://picsum.photos/150/100?random=8',
+        'https://picsum.photos/150/100?random=9',
       ];
 
-      const largeImages = allImages.slice(0, 3);
-      const smallImages = allImages.slice(3);
+      const largeImages = allImages.slice(0, 2);
+      const smallImages = allImages.slice(2);
 
       const openLightbox = (image) => {
         setSelectedImage(image);
@@ -736,7 +755,11 @@
                     src={image}
                     alt={`ภาพใหญ่ที่ ${index + 1}`}
                     className="w-full"
-                    onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'}
+                    loading="lazy"
+                    onError={(e) => {
+                      console.warn(`Failed to load large gallery image: ${image}`);
+                      e.target.src = 'https://via.placeholder.com/300x450.png?text=Gallery+Image';
+                    }}
                   />
                 </div>
               ))}
@@ -757,7 +780,11 @@
                     src={image}
                     alt={`ภาพเล็กที่ ${index + 1}`}
                     className="w-full"
-                    onError={(e) => e.target.src = 'https://picsum.photos/200/150?random=0'}
+                    loading="lazy"
+                    onError={(e) => {
+                      console.warn(`Failed to load small gallery image: ${image}`);
+                      e.target.src = 'https://via.placeholder.com/150x100.png?text=Gallery+Image';
+                    }}
                   />
                 </div>
               ))}
@@ -767,7 +794,14 @@
                 <span className="lightbox-close" onClick={closeLightbox}>×</span>
                 <span className="lightbox-nav left" onClick={prevImage}>❮</span>
                 <span className="lightbox-nav right" onClick={nextImage}>❯</span>
-                <img src={selectedImage} alt="ภาพที่เลือก" />
+                <img
+                  src={selectedImage}
+                  alt="ภาพที่เลือก"
+                  onError={(e) => {
+                    console.warn(`Failed to load lightbox image: ${selectedImage}`);
+                    e.target.src = 'https://via.placeholder.com/300x450.png?text=Lightbox+Image';
+                  }}
+                />
               </div>
             )}
           </div>
@@ -929,6 +963,7 @@
                   className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                   style={{
                     backgroundImage: `url('imgs/first.jpg')`,
+                    backgroundImage: `url('https://via.placeholder.com/300x450.png?text=First+Image')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
@@ -1037,7 +1072,8 @@
                 <div
                   className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                   style={{
-                    backgroundImage: `url('https://picsum.photos/800/600?random=14')`,
+                    backgroundImage: `url('https://picsum.photos/300/450?random=14')`,
+                    backgroundImage: `url('https://via.placeholder.com/300x450.png?text=Countdown+Image')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
@@ -1146,6 +1182,7 @@
                   className="w-full h-full bg-cover bg-center rounded-tl-[40%] rounded-tr-[40%] md:rounded-tl-[40%] md:rounded-bl-[40%] shadow-xl"
                   style={{
                     backgroundImage: `url('imgs/Ai_gen.png')`,
+                    backgroundImage: `url('https://via.placeholder.com/300x450.png?text=RSVP+Image')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
