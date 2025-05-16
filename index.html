@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,12 +10,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@babel/standalone@7.25.7/babel.min.js" crossorigin></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js" crossorigin></script>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700&family=Dancing+Script:wght@700&display=swap"
+    rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
     html {
       scroll-behavior: smooth;
     }
+
     .section {
       opacity: 0;
       transform: translateY(20px);
@@ -25,29 +29,35 @@
       justify-content: center;
       position: relative;
     }
+
     .section.visible {
       opacity: 1;
       transform: translateY(0);
     }
+
     .slider-container {
       position: relative;
       width: 100%;
       max-width: 1280px;
       overflow: hidden;
     }
+
     .slider {
       display: flex;
       transition: transform 0.5s ease-in-out;
     }
+
     .slide {
       flex: 0 0 25%;
       padding: 0 8px;
       transform: scale(1);
       transition: transform 0.3s ease;
     }
+
     .slide.active {
       animation: zoomInSlide 0.5s ease;
     }
+
     .slide img {
       width: 100%;
       height: 384px;
@@ -55,11 +65,13 @@
       border-radius: 8px;
       box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     }
+
     .dots {
       display: flex;
       justify-content: center;
       margin-top: 16px;
     }
+
     .dot {
       width: 10px;
       height: 10px;
@@ -68,16 +80,22 @@
       margin: 0 5px;
       cursor: pointer;
     }
+
     .dot.active {
       background-color: #4A4A4A;
     }
-    .gallery-large img, .gallery-small img {
+
+    .gallery-large img,
+    .gallery-small img {
       transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
-    .gallery-large img:hover, .gallery-small img:hover {
+
+    .gallery-large img:hover,
+    .gallery-small img:hover {
       transform: scale(1.05);
       box-shadow: 0 0 15px rgba(244, 182, 194, 0.5);
     }
+
     .lightbox {
       position: fixed;
       top: 0;
@@ -91,15 +109,18 @@
       z-index: 1000;
       animation: fadeIn 0.3s ease-in-out;
     }
+
     .lightbox img {
       max-width: 90%;
       max-height: 90%;
       border-radius: 8px;
       animation: zoomIn 0.3s ease-in-out;
     }
+
     .lightbox.fade-out {
       animation: fadeOut 0.3s ease-in-out;
     }
+
     .lightbox-close {
       position: absolute;
       top: 20px;
@@ -108,6 +129,7 @@
       color: white;
       cursor: pointer;
     }
+
     .lightbox-nav {
       position: absolute;
       top: 50%;
@@ -117,28 +139,35 @@
       cursor: pointer;
       user-select: none;
     }
+
     .lightbox-nav.left {
       left: 20px;
     }
+
     .lightbox-nav.right {
       right: 20px;
     }
+
     .gallery-large img {
       aspect-ratio: 3 / 4;
       object-fit: cover;
     }
+
     .gallery-small img {
       aspect-ratio: 4 / 3;
       object-fit: cover;
     }
+
     .countdown-number {
       transition: all 0.3s ease;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       position: relative;
     }
+
     .countdown-number.active {
       animation: pulseShadow 0.5s ease;
     }
+
     .countdown-number.active::after {
       content: '';
       position: absolute;
@@ -151,31 +180,38 @@
       animation: sparkle 0.5s ease;
       transform: translateX(-50%);
     }
-    #particles-js, #stars-js {
+
+    #particles-js,
+    #stars-js {
       position: absolute;
       width: 100%;
       height: 100%;
       z-index: 0;
     }
+
     .fade-in-up {
       opacity: 0;
       transform: translateY(20px);
       animation: fadeInUp 1s ease forwards;
     }
+
     .fade-in-up-delay {
       opacity: 0;
       transform: translateY(20px);
       animation: fadeInUp 1s ease forwards 0.3s;
     }
+
     .fade-in-text {
       opacity: 0;
       animation: fadeInText 1.2s ease forwards;
     }
+
     .parallax {
       background-attachment: fixed;
       background-position: center;
       background-size: cover;
     }
+
     .back-to-top {
       position: fixed;
       bottom: 20px;
@@ -190,20 +226,24 @@
       transition: opacity 0.3s ease, visibility 0.3s ease;
       z-index: 1000;
     }
+
     .back-to-top.visible {
       opacity: 1;
       visibility: visible;
     }
+
     .button-effect {
       transition: transform 0.2s ease, background-color 0.3s ease;
       position: relative;
       overflow: hidden;
     }
+
     .button-effect:hover {
       transform: scale(1.05);
       background-color: #F4B6C2;
       color: white;
     }
+
     .button-effect::after {
       content: '';
       position: absolute;
@@ -216,14 +256,17 @@
       transform: translate(-50%, -50%);
       transition: width 0.4s ease, height 0.4s ease;
     }
+
     .button-effect:active::after {
       width: 200px;
       height: 200px;
       opacity: 0;
     }
+
     .heart-effect {
       position: relative;
     }
+
     .heart-effect.clicked::after {
       content: '♥';
       position: absolute;
@@ -234,6 +277,7 @@
       font-size: 20px;
       animation: heartFloat 1s ease forwards;
     }
+
     .scroll-indicator {
       position: absolute;
       bottom: 20px;
@@ -243,18 +287,21 @@
       color: #A0A0A0;
       animation: bounce 2s infinite;
     }
+
     .couple-container {
       display: flex;
       flex-direction: row;
       justify-content: center;
       gap: 32px;
     }
+
     .couple-item {
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 8px;
     }
+
     .couple-item img {
       width: 200px;
       height: 200px;
@@ -263,181 +310,299 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       transition: transform 0.3s ease;
     }
+
     .couple-item img:hover {
       transform: scale(1.1);
     }
+
     .couple-fullname {
       font-family: 'Noto Serif Thai', serif;
       font-weight: 300;
       color: #A0A0A0;
       font-size: 1.25rem;
     }
+
     @media (max-width: 640px) {
       .section {
         min-height: auto;
         padding: 40px 16px;
       }
-      .section > div {
+
+      .section>div {
         flex-direction: column !important;
       }
-      .section > div > div {
+
+      .section>div>div {
         width: 100% !important;
         margin-bottom: 20px;
       }
+
       .section .w-full.h-96 {
         height: 200px;
       }
+
       h1 {
         font-size: 2.5rem !important;
       }
+
       h2 {
         font-size: 1.5rem !important;
       }
+
       p {
         font-size: 1rem !important;
       }
+
       .countdown-number {
         font-size: 1.5rem !important;
         padding: 8px !important;
       }
+
       .slide {
         flex: 0 0 100%;
       }
+
       .slide img {
         height: 200px;
       }
+
       .gallery-large img {
         aspect-ratio: 4 / 3;
       }
+
       .gallery-small {
         min-width: 120px !important;
         max-width: 120px !important;
         margin: 4px;
       }
+
       .parallax {
         background-attachment: scroll;
       }
+
       .scroll-indicator {
         font-size: 18px;
       }
+
       .c Couple-container {
         flex-direction: column;
         gap: 16px;
       }
+
       .couple-item img {
         width: 150px;
         height: 150px;
       }
+
       .couple-fullname {
         font-size: 1rem;
       }
     }
+
     @media (min-width: 641px) and (max-width: 1024px) {
       .section {
         min-height: auto;
         padding: 60px 24px;
       }
-      .section > div {
+
+      .section>div {
         flex-direction: column;
       }
-      .section > div > div {
+
+      .section>div>div {
         width: 100% !important;
         margin-bottom: 30px;
       }
+
       .section .w-full.h-96 {
         height: 300px;
       }
+
       h1 {
         font-size: 4rem !important;
       }
+
       h2 {
         font-size: 2rem !important;
       }
+
       p {
         font-size: 1.2rem !important;
       }
+
       .countdown-number {
         font-size: 2rem !important;
         padding: 12px !important;
       }
+
       .slide {
         flex: 0 0 50%;
       }
+
       .slide img {
         height: 300px;
       }
+
       .gallery-large img {
         aspect-ratio: 3 / 4;
       }
+
       .gallery-small {
         min-width: 150px !important;
         max-width: 150px !important;
         margin: 8px;
       }
+
       .parallax {
         background-attachment: scroll;
       }
+
       .couple-container {
         gap: 24px;
       }
+
       .couple-item img {
         width: 180px;
         height: 180px;
       }
+
       .couple-fullname {
         font-size: 1.125rem;
       }
     }
+
     @media (min-width: 1025px) {
       .section {
         min-height: 100vh;
         padding: 80px 32px;
       }
     }
+
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
+
     @keyframes fadeOut {
-      from { opacity: 1; }
-      to { opacity: 0; }
+      from {
+        opacity: 1;
+      }
+
+      to {
+        opacity: 0;
+      }
     }
+
     @keyframes zoomIn {
-      from { transform: scale(0.8); opacity: 0; }
-      to { transform: scale(1); opacity: 1; }
+      from {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1;
+      }
     }
+
     @keyframes zoomInSlide {
-      from { transform: scale(0.95); }
-      to { transform: scale(1); }
+      from {
+        transform: scale(0.95);
+      }
+
+      to {
+        transform: scale(1);
+      }
     }
+
     @keyframes pulseShadow {
-      0% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-      50% { box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); }
-      100% { box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+      0% {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      50% {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+      }
+
+      100% {
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
     }
+
     @keyframes sparkle {
-      0% { transform: translateX(-50%) scale(1); opacity: 1; }
-      100% { transform: translateX(-50%) scale(2); opacity: 0; }
+      0% {
+        transform: translateX(-50%) scale(1);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) scale(2);
+        opacity: 0;
+      }
     }
+
     @keyframes heartFloat {
-      0% { transform: translateX(-50%) translateY(0); opacity: 1; }
-      100% { transform: translateX(-50%) translateY(-50px); opacity: 0; }
+      0% {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) translateY(-50px);
+        opacity: 0;
+      }
     }
+
     @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
+
     @keyframes fadeInText {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
+
     @keyframes bounce {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-10px); }
-      60% { transform: translateY(-5px); }
+
+      0%,
+      20%,
+      50%,
+      80%,
+      100% {
+        transform: translateY(0);
+      }
+
+      40% {
+        transform: translateY(-10px);
+      }
+
+      60% {
+        transform: translateY(-5px);
+      }
     }
   </style>
 </head>
+
 <body>
   <div id="root"></div>
   <script type="text/babel">
@@ -558,6 +723,44 @@
     const CoupleIntro = () => {
       return (
         <div className="w-full flex flex-col items-center justify-center p-8 text-center">
+
+          {/* 🔶 โลโก้ + ชื่อพ่อแม่ */}
+          <div className="flex flex-col items-center justify-center mb-12">
+            {/* โลโก้ NB */}
+            <img
+              src="imgs/logo.png" // 👈 ใส่โลโก้ที่คุณต้องการ เช่น "imgs/logo-nb.png"
+              alt="NB Logo"
+              className="w-28 h-28 mb-6"
+            />
+
+            {/* ชื่อพ่อแม่ */}
+            <div className="flex flex-col md:flex-row items-center justify-center text-center gap-8">
+              {/* ฝั่งเจ้าบ่าว */}
+              <div>
+                <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
+                  นายบุญนิวัฒน์ ทองทรง<br />
+                  นางจุเตี้ยน ทองทรง
+                </p>
+              </div>
+
+              {/* และ */}
+              <div>
+                <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#4A4A4A' }}>
+                  และ
+                </p>
+              </div>
+
+              {/* ฝั่งเจ้าสาว */}
+              <div>
+                <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
+                  นายบันยัติ กิ่งแก้ว<br />
+                  นางขนิฐา กิ่งแก้ว
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* 🔶 หัวข้อเจ้าบ่าว & เจ้าสาว */}
           <div className="flex items-center justify-center mb-4">
             <hr className="w-24 border-gray-400" />
             <p
@@ -572,6 +775,8 @@
             </p>
             <hr className="w-24 border-gray-400" />
           </div>
+
+          {/* 🔶 ข้อมูลคู่บ่าวสาว */}
           <div className="couple-container">
             <div className="couple-item">
               <img
@@ -589,30 +794,17 @@
               >
                 Nat
               </h3>
-              <p
-                className="couple-fullname mt-2 fade-in-text"
-              >
+              <p className="couple-fullname mt-2 fade-in-text">
                 ว่าที่ ร.ต.ณัฐวุฒิ ทองทรง
               </p>
-              <p
-                className="couple-fullname mt-2 fade-in-text"
-                style={{
-                  fontFamily: "'Dancing Script', cursive",
-                  color: '#8B5A2B',
-                }}
-              >
-              สถาปนิก
+              <p className="couple-fullname mt-2 fade-in-text" style={{ fontFamily: "'Dancing Script', cursive", color: '#8B5A2B' }}>
+                สถาปนิก
               </p>
-              <p
-                className="couple-fullname fade-in-text"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  color: '#8B5A2B',
-                }}
-              >
-              Architecture
+              <p className="couple-fullname fade-in-text" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
+                Architecture
               </p>
             </div>
+
             <div className="couple-item">
               <img
                 src="imgs/bride.png"
@@ -629,34 +821,22 @@
               >
                 Bat
               </h3>
-              <p
-                className="couple-fullname mt-2 fade-in-text"
-              >
+              <p className="couple-fullname mt-2 fade-in-text">
                 นางสาวสุพัตรา กิ่งแก้ว
               </p>
-              <p
-                className="couple-fullname mt-2 fade-in-text"
-                style={{
-                  fontFamily: "'Dancing Script', cursive",
-                  color: '#8B5A2B',
-                }}
-              >
-              พยาบาล
+              <p className="couple-fullname mt-2 fade-in-text" style={{ fontFamily: "'Dancing Script', cursive", color: '#8B5A2B' }}>
+                พยาบาล
               </p>
-              <p
-                className="couple-fullname fade-in-text"
-                style={{
-                  fontFamily: "'Noto Serif Thai', serif",
-                  color: '#8B5A2B',
-                }}
-              >
-              Nurse
+              <p className="couple-fullname fade-in-text" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
+                Nurse
               </p>
             </div>
           </div>
         </div>
       );
     };
+
+
 
     const Gallery = () => {
       const [selectedImage, setSelectedImage] = React.useState(null);
@@ -827,7 +1007,7 @@
           if (window.particlesJS) {
             const starsElement = document.getElementById('stars-js');
             const particlesElement = document.getElementById('particles-js');
-            
+
             if (starsElement) {
               window.particlesJS('stars-js', {
                 particles: {
@@ -905,15 +1085,16 @@
 
             <div className="section w-full flex flex-col md:flex-row items-center justify-center relative">
               <div id="stars-js"></div>
-              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+              <div className="w-full md:w-1/2 h-[100vh] md:h-screen flex items-center justify-center p-0 md:p-8">
                 <div
-                  className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
+                  className="w-full h-full bg-cover bg-center md:rounded-lg shadow-xl parallax"
                   style={{
                     backgroundImage: `url('imgs/first.jpg')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
               </div>
+
               <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <h1
                   className="text-6xl md:text-8xl font-bold mb-4 fade-in-up"
@@ -966,7 +1147,7 @@
                     color: '#A0A0A0',
                   }}
                 >
-                  ขอเรียนเชิญท่านร่วมเป็นเกียรติในพิธีสมรสของเรา และร่วมเฉลิมฉลองความรักอันงดงาม โปรดอย่าพลาดโอกาสพบปะและร่วมยินดีในวันสำคัญของเรา
+                  ขอเรียนเชิญท่านร่วมเป็นเกียรติในพิธีมงคลสมรส ร่วมเฉลิมฉลองความรักอันงดงาม อย่าพลาดโอกาสพบปะและร่วมยินดีในวันสำคัญ
                 </p>
                 <div className="scroll-indicator">↓</div>
               </div>
@@ -976,7 +1157,89 @@
               <CoupleIntro />
             </div>
 
-            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#f3f4f6] p-8">
+              <div className="flex items-center justify-center mb-4">
+                <hr className="w-24 border-gray-400" />
+                <p
+                  className="mx-4 text-2xl md:text-3xl fade-in-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  กำหนดพิธีการ
+                </p>
+                <hr className="w-24 border-gray-400" />
+              </div>
+              <h2
+                className="text-4xl md:text-5xl font-bold mb-8 fade-in-text"
+                style={{
+                  fontFamily: "'Dancing Script', cursive",
+                  color: '#8B5A2B',
+                }}
+              >
+                Wedding Schedule
+              </h2>
+
+              {/* ✅ ข้อความสถานที่จัดงาน */}
+              <p
+                className="text-base md:text-lg mb-8 fade-in-text"
+                style={{
+                  fontFamily: "'Noto Serif Thai', serif",
+                  fontWeight: 300,
+                  color: '#4A4A4A',
+                }}
+              >
+                ณ บ้านเลขที่ 258 หมู่ที่ 7 ต.หานโพธิ์ อ. เขาชัยสน จ.พัทลุง
+              </p>
+
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-5xl text-center">
+                {[
+                  { time: '08:09 น.', titleTh: 'แห่ขบวนขันหมาก', titleEn: 'Procession' },
+                  { time: '09:49 น.', titleTh: 'พิธีสวมแหวนหมั้น', titleEn: 'Engagement Ceremony' },
+                  { time: '10:49 น.', titleTh: 'พิธีหลั่งน้ำพระพุทธมนต์', titleEn: 'Water Blessing Ceremony' },
+                  { time: '11:09 น.', titleTh: 'รับประทานอาหาร', titleEn: 'Lunch Reception' },
+                  { time: '19:00 น.', titleTh: 'ดนตรีสด', titleEn: 'Live Music' },
+                ].map((item, index) => (
+                  <div key={index} className="flex flex-col items-center fade-in-up">
+                    <div className="w-20 h-20 bg-white rounded-full shadow-md flex items-center justify-center mb-4">
+                      <img src="" alt="icon" className="w-10 h-10" />
+                    </div>
+                    <p
+                      className="text-sm text-gray-600"
+                      style={{
+                        fontFamily: "'Noto Serif Thai', serif",
+                        fontWeight: 300,
+                      }}
+                    >
+                      {item.titleEn}
+                    </p>
+                    <p
+                      className="text-lg font-bold text-[#4A4A4A] mt-1"
+                      style={{
+                        fontFamily: "'Noto Serif Thai', serif",
+                        fontWeight: 700,
+                      }}
+                    >
+                      {item.titleTh}
+                    </p>
+                    <p
+                      className="text-sm text-gray-500 mt-1"
+                      style={{
+                        fontFamily: "'Noto Serif Thai', serif",
+                        fontWeight: 300,
+                      }}
+                    >
+                      {item.time}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
               <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <div className="flex items-center justify-center mb-4">
                   <hr className="w-24 border-gray-400" />
@@ -1025,7 +1288,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#f3f4f6] p-8">
               <div className="flex items-center justify-center mb-4">
                 <hr className="w-24 border-gray-400" />
                 <p
@@ -1054,7 +1317,7 @@
               <Slider />
             </div>
 
-            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-gray-100">
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
               <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <div className="flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -1121,7 +1384,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
+            <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#f3f4f6]">
               <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
                 <div
                   className="w-full h-full bg-cover bg-center rounded-tl-[50%] rounded-tr-[50%] md:rounded-tl-[50%] md:rounded-bl-[50%] shadow-xl"
@@ -1198,4 +1461,5 @@
     root.render(<App />);
   </script>
 </body>
+
 </html>
