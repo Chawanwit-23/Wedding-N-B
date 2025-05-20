@@ -675,10 +675,10 @@
     const Slider = () => {
       const [currentIndex, setCurrentIndex] = React.useState(0);
       const images = [
-        'imgs/number5.jpg',
-        'imgs/number8.jpg',
-        'imgs/number1.jpg',
-        'imgs/number3.jpg',
+        'imgs/set1_1.jpg',
+        'imgs/set1_2.jpg',
+        'imgs/set1_3.jpg',
+        'imgs/set1_5.jpg',
       ];
 
       React.useEffect(() => {
@@ -837,103 +837,48 @@
     };
 
 
-
     const Gallery = () => {
-      const [selectedImage, setSelectedImage] = React.useState(null);
-      const [fadeOut, setFadeOut] = React.useState(false);
-      const [currentIndex, setCurrentIndex] = React.useState(0);
-
-      const allImages = [
-        'imgs/number1.jpg',
-        'imgs/number3.jpg',
-        'imgs/number4.jpg',
-        'imgs/number2.jpg',
-        'imgs/number5.jpg',
-        'imgs/number6.jpg',
-        'imgs/number8.jpg',
+      const images = [
+        'imgs/number1_2.jpg', 'imgs/number1.jpg', // รูปคู่บน
+        'imgs/number9.jpg', 'imgs/number9_2.jpg', // รูปตั้งกลาง
+        'imgs/number_last.jpg',                     // รูปเดี่ยวล่าง
       ];
 
-      const largeImages = allImages.slice(0, 3);
-      const smallImages = allImages.slice(3);
-
-      const openLightbox = (image) => {
-        setSelectedImage(image);
-        setCurrentIndex(allImages.indexOf(image));
-        setFadeOut(false);
-      };
-
-      const closeLightbox = () => {
-        setFadeOut(true);
-      };
-
-      const handleAnimationEnd = () => {
-        if (fadeOut) {
-          setSelectedImage(null);
-          setFadeOut(false);
-        }
-      };
-
-      const nextImage = () => {
-        const nextIndex = (currentIndex + 1) % allImages.length;
-        setCurrentIndex(nextIndex);
-        setSelectedImage(allImages[nextIndex]);
-      };
-
-      const prevImage = () => {
-        const prevIndex = (currentIndex - 1 + allImages.length) % allImages.length;
-        setCurrentIndex(prevIndex);
-        setSelectedImage(allImages[prevIndex]);
-      };
-
       return (
-        <div className="w-full max-w-5xl relative">
-          <div id="particles-js"></div>
-          <div className="relative z-10">
-            <div className="flex flex-col md:flex-row">
-              {largeImages.map((image, index) => (
-                <div key={index} className="flex-1 cursor-pointer gallery-large" onClick={() => openLightbox(image)}>
-                  <img
-                    src={image}
-                    alt={`ภาพใหญ่ที่ ${index + 1}`}
-                    className="w-full"
-                    onError={(e) => e.target.src = 'imgs/number9'}
-                  />
-                </div>
-              ))}
-            </div>
-            <h2
-              className="text-6xl md:text-8xl font-bold my-8 text-center fade-in-text"
-              style={{
-                fontFamily: "'Dancing Script', cursive",
-                color: '#A0A0A0',
-              }}
-            >
-              Special Gallery
-            </h2>
-            <div className="flex flex-wrap justify-center">
-              {smallImages.map((image, index) => (
-                <div key={index} className="flex-1 cursor-pointer gallery-small min-w-[150px] max-w-[150px]" onClick={() => openLightbox(image)}>
-                  <img
-                    src={image}
-                    alt={`ภาพเล็กที่ ${index + 1}`}
-                    className="w-full"
-                    onError={(e) => e.target.src = 'https://picsum.photos/200/150?random=0'}
-                  />
-                </div>
-              ))}
-            </div>
-            {selectedImage && (
-              <div className={`lightbox ${fadeOut ? 'fade-out' : ''}`} onAnimationEnd={handleAnimationEnd}>
-                <span className="lightbox-close" onClick={closeLightbox}>×</span>
-                <span className="lightbox-nav left" onClick={prevImage}>❮</span>
-                <span className="lightbox-nav right" onClick={nextImage}>❯</span>
-                <img src={selectedImage} alt="ภาพที่เลือก" />
-              </div>
-            )}
+        <div className="w-full max-w-4xl mx-auto px-4 py-12">
+          <h2 className="text-4xl md:text-6xl font-bold text-center mb-8 fade-in-text"
+            style={{ fontFamily: "'Dancing Script', cursive", color: '#8B5A2B' }}>
+            Special Gallery
+          </h2>
+
+          {/* แถว 1: แนวนอน 2 รูป */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <img src={images[0]} alt="img1" className="w-full h-[700px] object-cover rounded-lg shadow-md" />
+            <img src={images[1]} alt="img2" className="w-full h-[700px] object-cover rounded-lg shadow-md" />
+          </div>
+
+          {/* แถว 2: แนวตั้ง 2 รูป */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <img src={images[2]} alt="img3" className="w-full h-[700px] object-cover rounded-lg shadow-md" />
+            <img src={images[3]} alt="img4" className="w-full h-[700px] object-cover rounded-lg shadow-md" />
+          </div>
+
+          {/* ข้อความกลาง */}
+          <p className="text-center text-xl text-[#E2AFAF] italic mb-4 fade-in-text"
+            style={{ fontFamily:"'Dancing Script', cursive", color: '#8B5A2B' }}>
+            "She's my life partner."
+          </p>
+
+          {/* แถว 3: เดี่ยว 1 รูป */}
+          <div>
+            <img src={images[4]} alt="img5" className="w-full h-[400px] object-cover rounded-lg shadow-md" />
           </div>
         </div>
       );
     };
+
+
+
 
     const ErrorBoundary = ({ children }) => {
       const [hasError, setHasError] = React.useState(false);
@@ -1087,12 +1032,13 @@
               <div id="stars-js"></div>
               <div className="w-full md:w-1/2 h-[100vh] md:h-screen flex items-center justify-center p-0 md:p-8">
                 <div
-                  className="w-full h-full bg-cover bg-center md:rounded-lg shadow-xl parallax"
+                  className="w-full h-full bg-cover bg-center md:rounded-lg parallax"
                   style={{
-                    backgroundImage: `url('imgs/first.jpg')`,
-                    boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+                    backgroundImage: `url('imgs/first2.png')`,
                   }}
                 ></div>
+
+
               </div>
 
               <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
@@ -1281,7 +1227,7 @@
                 <div
                   className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                   style={{
-                    backgroundImage: `url('imgs/Time.jpg')`,
+                    backgroundImage: `url('imgs/ring.jpg')`,
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
