@@ -364,8 +364,12 @@
         padding: 8px !important;
       }
 
-      .slide {
-        flex: 0 0 100%;
+      .slide img {
+        width: 100%;
+        height: auto; /* 👈 เปลี่ยนจาก fixed height เป็นอัตโนมัติ */
+        object-fit: contain; /* 👈 เปลี่ยนจาก cover เป็น contain */
+        border-radius: 8px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       }
 
       .slide img {
@@ -606,6 +610,13 @@
         transform: translateY(-5px);
       }
     }
+
+    @media (max-width: 640px) {
+      .slide img {
+        height: auto;
+        object-fit: contain;
+      }
+    }
   </style>
 </head>
 
@@ -697,7 +708,6 @@
         'imgs/set/set14.jpg',
         'imgs/set/set15.jpg',
         'imgs/set/set16.jpg',
-        'imgs/set/set17.jpg',
         'imgs/set/set18.jpg',
         'imgs/set/set19.jpg',
       ];
