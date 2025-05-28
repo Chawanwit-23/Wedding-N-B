@@ -713,31 +713,48 @@
         return () => clearInterval(interval);
       }, [images.length]);
 
-      const getTransformValue = () => {
-        if (window.innerWidth <= 640) {
-          return `translateX(-${currentIndex * 100}%)`;
-        } else if (window.innerWidth <= 1024) {
-          return `translateX(-${currentIndex * 50}%)`;
-        } else {
-          return `translateX(-${currentIndex * 25}%)`;
-        }
-      };
-
       return (
-        <div className="slider-container">
-          <div className="slider" style={{ transform: getTransformValue() }}>
+        <div className="slider-container" style={{ overflow: 'hidden' }}>
+          <div
+            className="slider"
+            style={{
+              display: 'flex',
+              width: `${images.length * 100}%`,
+              transform: `translateX(-${currentIndex * (1800 / images.length)}%)`,
+              transition: 'transform 0.5s ease-in-out'
+            }}
+          >
             {images.map((image, index) => (
-              <div key={index} className={`slide ${currentIndex === index ? 'active' : ''}`}>
-                <img src={image} alt={`ภาพที่ ${index + 1}`} onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'} />
+              <div key={index} style={{ flex: `0 0 100%`, padding: '0 8px' }}>
+                <img
+                  src={image}
+                  alt={`ภาพที่ ${index + 1}`}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    borderRadius: '8px',
+                    backgroundColor: '#f3f4f6'
+                  }}
+                  onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'}
+                />
               </div>
             ))}
           </div>
-          <div className="dots">
+          <div className="dots" style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
             {images.map((_, index) => (
               <div
                 key={index}
                 className={`dot ${currentIndex === index ? 'active' : ''}`}
                 onClick={() => setCurrentIndex(index)}
+                style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  margin: '0 5px',
+                  cursor: 'pointer',
+                  backgroundColor: currentIndex === index ? '#4A4A4A' : '#A0A0A0'
+                }}
               ></div>
             ))}
           </div>
