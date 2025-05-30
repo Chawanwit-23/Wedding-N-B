@@ -1155,15 +1155,20 @@
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-5xl text-center">
                 {[
-                  { time: '08:09 น.', titleTh: 'แห่ขบวนขันหมาก', titleEn: 'Procession' },
-                  { time: '09:49 น.', titleTh: 'พิธีสวมแหวนหมั้น', titleEn: 'Engagement Ceremony' },
-                  { time: '10:49 น.', titleTh: 'พิธีหลั่งน้ำพระพุทธมนต์', titleEn: 'Water Blessing Ceremony' },
-                  { time: '11:09 น.', titleTh: 'รับประทานอาหาร', titleEn: 'Lunch Reception' },
-                  { time: '19:00 น.', titleTh: 'ดนตรีสด', titleEn: 'Live Music' },
+                  { time: '08:09 น.', titleTh: 'แห่ขบวนขันหมาก', titleEn: 'Procession', icon: 'imgs/icon/Procession.png' },
+                  { time: '09:49 น.', titleTh: 'พิธีสวมแหวนหมั้น', titleEn: 'Engagement Ceremony', icon: 'imgs/icon/Engagement_Ceremony.png' },
+                  { time: '10:49 น.', titleTh: 'พิธีหลั่งน้ำพระพุทธมนต์', titleEn: 'Water Blessing Ceremony', icon: 'imgs/icon/Water_Blessing_Ceremony.png' },
+                  { time: '11:09 น.', titleTh: 'รับประทานอาหาร', titleEn: 'Lunch Reception', icon: 'imgs/icon/Lunch_Reception.png' },
+                  { time: '19:00 น.', titleTh: 'ดนตรีสด', titleEn: 'Live Music', icon: 'imgs/icon/Live_Music.png' },
                 ].map((item, index) => (
                   <div key={index} className="flex flex-col items-center fade-in-up">
                     <div className="w-20 h-20 bg-white rounded-full shadow-md flex items-center justify-center mb-4">
-                      <img src="#######" alt="icon" className="w-10 h-10" />
+                      <img
+                        src={item.icon}
+                        alt={`${item.titleEn} icon`}
+                        className="w-30 h-30"
+                        onError={(e) => e.target.src = 'https://via.placeholder.com/40?text=Icon'}
+                      />
                     </div>
                     <p
                       className="text-sm text-gray-600"
