@@ -246,7 +246,7 @@
 
     .button-effect:hover {
       transform: scale(1.05);
-      background-color: #F4B6C2;
+      background-color: #E6DCCD;
       color: white;
     }
 
@@ -694,13 +694,13 @@
         'imgs/set/set6.jpg',
         'imgs/set/set7.jpg',
         'imgs/set/set8.jpg',
-        'imgs/set/set9.jpg',
+        // 'imgs/set/set9.jpg',
         'imgs/set/set10.jpg',
         'imgs/set/set11.jpg',
         'imgs/set/set12.jpg',
         'imgs/set/set13.jpg',
         'imgs/set/set14.jpg',
-        'imgs/set/set15.jpg',
+        // 'imgs/set/set15.jpg',
         'imgs/set/set16.jpg',
         'imgs/set/set18.jpg',
         'imgs/set/set19.jpg',
@@ -720,7 +720,7 @@
             style={{
               display: 'flex',
               width: `${images.length * 100}%`,
-              transform: `translateX(-${currentIndex * (1800 / images.length)}%)`,
+              transform: `translateX(-${currentIndex * (1600 / images.length)}%)`,
               transition: 'transform 0.5s ease-in-out'
             }}
           >
@@ -882,7 +882,7 @@
     const Gallery = () => {
       const images = [
         'imgs/number1_2.jpg', 'imgs/number1.jpg', // รูปคู่บน
-        'imgs/fix.JPG', 'imgs/number9_2.jpg', // รูปตั้งกลาง
+        'imgs/number9.JPG', 'imgs/number9_2.jpg', // รูปตั้งกลาง
         'imgs/number_last.jpg',                     // รูปเดี่ยวล่าง
       ];
 
@@ -918,7 +918,6 @@
         </div>
       );
     };
-
 
     const ErrorBoundary = ({ children }) => {
       const [hasError, setHasError] = React.useState(false);
@@ -1186,7 +1185,7 @@
                 ].map((item, index) => (
                   <div key={index} className="flex flex-col items-center fade-in-up">
                     <div className="w-20 h-20 bg-white rounded-full shadow-md flex items-center justify-center mb-4">
-                      <img src="" alt="icon" className="w-10 h-10" />
+                      <img src="#######" alt="icon" className="w-10 h-10" /> 
                     </div>
                     <p
                       className="text-sm text-gray-600"
@@ -1347,7 +1346,7 @@
                   href="https://www.google.com/maps/dir/?api=1&destination=7.5188034309114995,100.16880534483941"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect"
+                  className="flex items-center px-6 py-3 bg-[#F4B6C2] text-gray-800 rounded-lg shadow-md button-effect"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 400,
@@ -1422,7 +1421,7 @@
                   href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`flex items-center px-6 py-3 bg-gray-200 text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
+                  className={`flex items-center px-6 py-3 bg-[#F4B6C2] text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 400,
@@ -1438,7 +1437,7 @@
               </div>
             </div>
 
-            <div className="section w-full flex flex-col items-center justify-center bg-[#E8F0EF] p-8">
+            <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
               <Gallery />
             </div>
           </div>
