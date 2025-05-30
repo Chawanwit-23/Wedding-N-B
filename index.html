@@ -366,8 +366,8 @@
 
       .slide img {
         width: 100%;
-        height: auto; /* 👈 เปลี่ยนจาก fixed height เป็นอัตโนมัติ */
-        object-fit: contain; /* 👈 เปลี่ยนจาก cover เป็น contain */
+        height: auto;
+        object-fit: contain;
         border-radius: 8px;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
       }
@@ -610,13 +610,73 @@
         transform: translateY(-5px);
       }
     }
-
   </style>
 </head>
 
 <body>
   <div id="root"></div>
   <script type="text/babel">
+    // Slider Component
+    const Slider = ({ images, translateFactor }) => {
+      const [currentIndex, setCurrentIndex] = React.useState(0);
+
+      React.useEffect(() => {
+        const interval = setInterval(() => {
+          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        }, 3000);
+        return () => clearInterval(interval);
+      }, [images.length]);
+
+      return (
+        <div className="slider-container" style={{ overflow: 'hidden' }}>
+          <div
+            className="slider"
+            style={{
+              display: 'flex',
+              width: `${images.length * 100}%`,
+              transform: `translateX(-${currentIndex * (translateFactor / images.length)}%)`,
+              transition: 'transform 0.5s ease-in-out'
+            }}
+          >
+            {images.map((image, index) => (
+              <div key={index} style={{ flex: `0 0 100%`, padding: '0 8px' }}>
+                <img
+                  src={image}
+                  alt={`ภาพที่ ${index + 1}`}
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    objectFit: 'contain',
+                    borderRadius: '8px',
+                    backgroundColor: '#f3f4f6'
+                  }}
+                  onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'}
+                />
+              </div>
+            ))}
+          </div>
+          <div className="dots" style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+            {images.map((_, index) => (
+              <div
+                key={index}
+                className={`dot ${currentIndex === index ? 'active' : ''}`}
+                onClick={() => setCurrentIndex(index)}
+                style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  margin: '0 5px',
+                  cursor: 'pointer',
+                  backgroundColor: currentIndex === index ? '#4A4A4A' : '#A0A0A0'
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    // CountdownTimer Component
     const CountdownTimer = () => {
       const [timeLeft, setTimeLeft] = React.useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
       const [changed, setChanged] = React.useState({ days: false, hours: false, minutes: false, seconds: false });
@@ -683,116 +743,28 @@
       );
     };
 
-    const Slider = () => {
-      const [currentIndex, setCurrentIndex] = React.useState(0);
-      const images = [
-        'imgs/set/set1.jpg',
-        'imgs/set/set2.jpg',
-        'imgs/set/set3.jpg',
-        'imgs/set/set5.jpg',
-        'imgs/set/set4.jpg',
-        'imgs/set/set6.jpg',
-        'imgs/set/set7.jpg',
-        'imgs/set/set8.jpg',
-        // 'imgs/set/set9.jpg',
-        'imgs/set/set10.jpg',
-        'imgs/set/set11.jpg',
-        'imgs/set/set12.jpg',
-        'imgs/set/set13.jpg',
-        'imgs/set/set14.jpg',
-        // 'imgs/set/set15.jpg',
-        'imgs/set/set16.jpg',
-        'imgs/set/set18.jpg',
-        'imgs/set/set19.jpg',
-      ];
-
-      React.useEffect(() => {
-        const interval = setInterval(() => {
-          setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 3000);
-        return () => clearInterval(interval);
-      }, [images.length]);
-
-      return (
-        <div className="slider-container" style={{ overflow: 'hidden' }}>
-          <div
-            className="slider"
-            style={{
-              display: 'flex',
-              width: `${images.length * 100}%`,
-              transform: `translateX(-${currentIndex * (1600 / images.length)}%)`,
-              transition: 'transform 0.5s ease-in-out'
-            }}
-          >
-            {images.map((image, index) => (
-              <div key={index} style={{ flex: `0 0 100%`, padding: '0 8px' }}>
-                <img
-                  src={image}
-                  alt={`ภาพที่ ${index + 1}`}
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    objectFit: 'contain',
-                    borderRadius: '8px',
-                    backgroundColor: '#f3f4f6'
-                  }}
-                  onError={(e) => e.target.src = 'https://picsum.photos/400/600?random=0'}
-                />
-              </div>
-            ))}
-          </div>
-          <div className="dots" style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-            {images.map((_, index) => (
-              <div
-                key={index}
-                className={`dot ${currentIndex === index ? 'active' : ''}`}
-                onClick={() => setCurrentIndex(index)}
-                style={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  margin: '0 5px',
-                  cursor: 'pointer',
-                  backgroundColor: currentIndex === index ? '#4A4A4A' : '#A0A0A0'
-                }}
-              ></div>
-            ))}
-          </div>
-        </div>
-      );
-    };
-
+    // CoupleIntro Component
     const CoupleIntro = () => {
       return (
         <div className="w-full flex flex-col items-center justify-center p-8 text-center">
-
-          {/* 🔶 โลโก้ + ชื่อพ่อแม่ */}
           <div className="flex flex-col items-center justify-center mb-12">
-            {/* โลโก้ NB */}
             <img
-              src="imgs/logo.png" // 👈 ใส่โลโก้ที่คุณต้องการ เช่น "imgs/logo-nb.png"
+              src="imgs/logo.png"
               alt="NB Logo"
               className="w-28 h-28 mb-6"
             />
-
-            {/* ชื่อพ่อแม่ */}
             <div className="flex flex-col md:flex-row items-center justify-center text-center gap-8">
-              {/* ฝั่งเจ้าบ่าว */}
               <div>
                 <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
                   นายบุญนิวัฒน์ ทองทรง<br />
                   นางจุเตี้ยน ทองทรง
                 </p>
               </div>
-
-              {/* และ */}
               <div>
                 <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#4A4A4A' }}>
                   และ
                 </p>
               </div>
-
-              {/* ฝั่งเจ้าสาว */}
               <div>
                 <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
                   นายบันยัติ กิ่งแก้ว<br />
@@ -801,8 +773,6 @@
               </div>
             </div>
           </div>
-
-          {/* 🔶 หัวข้อเจ้าบ่าว & เจ้าสาว */}
           <div className="flex items-center justify-center mb-4">
             <hr className="w-24 border-gray-400" />
             <p
@@ -817,8 +787,6 @@
             </p>
             <hr className="w-24 border-gray-400" />
           </div>
-
-          {/* 🔶 ข้อมูลคู่บ่าวสาว */}
           <div className="couple-container">
             <div className="couple-item">
               <img
@@ -846,7 +814,6 @@
                 Architecture
               </p>
             </div>
-
             <div className="couple-item">
               <img
                 src="imgs/bride.png"
@@ -878,12 +845,12 @@
       );
     };
 
-
+    // Gallery Component
     const Gallery = () => {
       const images = [
-        'imgs/number1_2.jpg', 'imgs/number1.jpg', // รูปคู่บน
-        'imgs/number9.JPG', 'imgs/number9_2.jpg', // รูปตั้งกลาง
-        'imgs/number_last.jpg',                     // รูปเดี่ยวล่าง
+        'imgs/number1_2.jpg', 'imgs/number1.jpg',
+        'imgs/number9.JPG', 'imgs/number9_2.jpg',
+        'imgs/number_last.jpg',
       ];
 
       return (
@@ -892,26 +859,18 @@
             style={{ fontFamily: "'Dancing Script', cursive", color: '#8B5A2B' }}>
             Special Gallery
           </h2>
-
-          {/* แถว 1: แนวนอน 2 รูป */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <img src={images[0]} alt="img1" className="w-full h-auto max-h-[400px] object-cover rounded-lg shadow-md" />
             <img src={images[1]} alt="img2" className="w-full h-auto max-h-[400px] object-cover rounded-lg shadow-md" />
           </div>
-
-          {/* แถว 2: แนวตั้ง 2 รูป */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
             <img src={images[2]} alt="img3" className="w-full h-auto max-h-[400px] object-cover rounded-lg shadow-md" />
             <img src={images[3]} alt="img4" className="w-full h-auto max-h-[400px] object-cover rounded-lg shadow-md" />
           </div>
-
-          {/* ข้อความกลาง */}
           <p className="text-center text-xl text-[#E2AFAF] italic mb-4 fade-in-text"
             style={{ fontFamily: "'Dancing Script', cursive", color: '#8B5A2B' }}>
             "She's my life partner."
           </p>
-
-          {/* แถว 3: เดี่ยว 1 รูป */}
           <div>
             <img src={images[4]} alt="img5" className="w-full h-auto max-h-[400px] object-cover rounded-lg shadow-md" />
           </div>
@@ -919,6 +878,7 @@
       );
     };
 
+    // ErrorBoundary Component
     const ErrorBoundary = ({ children }) => {
       const [hasError, setHasError] = React.useState(false);
       const [errorInfo, setErrorInfo] = React.useState(null);
@@ -958,9 +918,34 @@
       return children;
     };
 
+    // App Component (รวมทุกหน้า)
     const App = () => {
       const [showBackToTop, setShowBackToTop] = React.useState(false);
       const [heartClicked, setHeartClicked] = React.useState(false);
+
+      const morningImages = [
+        'imgs/set/set1.jpg',
+        'imgs/set/set2.jpg',
+        'imgs/set/set3.jpg',
+        'imgs/set/set5.jpg',
+        'imgs/set/set4.jpg',
+        'imgs/set/set6.jpg',
+        'imgs/set/set7.jpg',
+        'imgs/set/set8.jpg',
+        'imgs/set/set10.jpg',
+        'imgs/set/set11.jpg',
+        'imgs/set/set12.jpg',
+        'imgs/set/set13.jpg',
+        'imgs/set/set14.jpg',
+        'imgs/set/set16.jpg',
+        'imgs/set/set18.jpg',
+        'imgs/set/set19.jpg',
+      ];
+
+      const eveningImages = [
+        'imgs/set/set9.jpg',
+        'imgs/set/set15.jpg',
+      ];
 
       React.useEffect(() => {
         const sections = document.querySelectorAll('.section');
@@ -1035,7 +1020,6 @@
           }
         };
 
-        // Delay initialization to ensure particles.js is loaded
         const timeout = setTimeout(initializeParticles, 1000);
 
         return () => {
@@ -1073,8 +1057,6 @@
                 className="w-full h-[60vh] sm:h-[80vh] md:h-screen bg-cover bg-center md:rounded-lg parallax"
                 style={{ backgroundImage: `url('imgs/title.png')` }}
               ></div>
-
-
               <div className="w-full md:w-1/2 flex flex-col items-center justify-center p-8 text-center">
                 <h1
                   className="text-6xl md:text-8xl font-bold mb-4 fade-in-up"
@@ -1161,8 +1143,6 @@
               >
                 Wedding Schedule
               </h2>
-
-              {/* ✅ ข้อความสถานที่จัดงาน */}
               <p
                 className="text-base md:text-lg mb-8 fade-in-text"
                 style={{
@@ -1173,8 +1153,6 @@
               >
                 ณ บ้านเลขที่ 258 หมู่ที่ 7 ต.หานโพธิ์ อ. เขาชัยสน จ.พัทลุง
               </p>
-
-
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10 max-w-5xl text-center">
                 {[
                   { time: '08:09 น.', titleTh: 'แห่ขบวนขันหมาก', titleEn: 'Procession' },
@@ -1185,7 +1163,7 @@
                 ].map((item, index) => (
                   <div key={index} className="flex flex-col items-center fade-in-up">
                     <div className="w-20 h-20 bg-white rounded-full shadow-md flex items-center justify-center mb-4">
-                      <img src="#######" alt="icon" className="w-10 h-10" /> 
+                      <img src="#######" alt="icon" className="w-10 h-10" />
                     </div>
                     <p
                       className="text-sm text-gray-600"
@@ -1265,7 +1243,8 @@
                     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
                   }}
                 ></div>
-              </div><div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
+              </div>
+              <div className="w-full md:w-1/2 h-96 md:h-screen flex items-center justify-center p-4 md:p-8">
                 <div
                   className="w-full h-full bg-cover bg-center rounded-lg shadow-xl parallax"
                   style={{
@@ -1302,7 +1281,8 @@
               >
                 NAT & BAT
               </h2>
-              <Slider />
+              <Slider images={morningImages} translateFactor={1600} />
+              <Slider images={eveningImages} translateFactor={200} />
             </div>
 
             <div className="section w-full flex flex-col md:flex-row items-center justify-center bg-[#F8EDEB]">
