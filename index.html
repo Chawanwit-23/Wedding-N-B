@@ -925,6 +925,84 @@
       return children;
     };
 
+    // ChatBot Component
+    const ChatBot = () => {
+      const [userInput, setUserInput] = React.useState('');
+      const [botResponse, setBotResponse] = React.useState('พร้อมตอบคำถามแล้วค่ะ ฮิฮิ!');
+
+      const handleSendMessage = async () => {
+        const inputElement = document.getElementById('chatInput');
+        if (inputElement.value.trim()) {
+          try {
+            const response = await fetch('http://localhost:5000/ask', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ question: inputElement.value }),
+            });
+            const data = await response.json();
+            if (data.error) {
+              setBotResponse(`ดูเหมือนว่าจะมีปัญหา: ${data.error} ฮิฮิ! ลองใหม่นะคะ`);
+            } else {
+              setBotResponse(`AI: ${data.response}`);
+            }
+            setUserInput('');
+          } catch (error) {
+            console.error('Error:', error);
+            setBotResponse('น้องส่งคำถามไม่สำเร็จค่ะ ฮิฮิ! ตรวจเน็ตหรือเซิร์ฟเวอร์หน่อยนะคะ');
+          }
+        } else {
+          setBotResponse('อย่าลืมพิมพ์คำถามก่อนนะคะ ฮิฮิ!');
+        }
+      };
+
+      return (
+        <div className="w-full flex flex-col items-center justify-center p-8 text-center">
+          <h2
+            className="text-4xl md:text-5xl font-bold mb-8 fade-in-text"
+            style={{
+              fontFamily: "'Dancing Script', cursive",
+              color: '#8B5A2B',
+            }}
+          >
+            Q & A
+          </h2>
+          <div className="w-full max-w-md bg-white p-4 rounded-lg shadow-md">
+            <div className="mb-4 h-32 overflow-y-auto border border-gray-300 p-2">
+              <p
+                id="botResponse"
+                className="text-green-600"
+                style={{ fontFamily: "'Noto Serif Thai', serif", fontWeight: 300 }}
+              >
+                {botResponse}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                id="chatInput"
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                className="w-full p-2 border rounded mb-2"
+                placeholder="ถามมาได้เลยยยย..."
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && userInput.trim()) {
+                    handleSendMessage();
+                  }
+                }}
+              />
+              <button
+                onClick={handleSendMessage}
+                className="px-4 py-2 bg-[#F4B6C2] text-white rounded shadow-md button-effect"
+                style={{ fontFamily: "'Noto Serif Thai', serif", fontWeight: 400 }}
+              >
+                ส่ง!
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
     // App Component (รวมทุกหน้า)
     const App = () => {
       const [showBackToTop, setShowBackToTop] = React.useState(false);
@@ -1051,9 +1129,7 @@
             <button
               className={`back-to-top ${showBackToTop ? 'visible' : ''}`}
               onClick={scrollToTop}
-              style={{
-                fontFamily: "'Noto Serif Thai', serif",
-              }}
+              style={{ fontFamily: "'Noto Serif Thai', serif" }}
             >
               ↑
             </button>
@@ -1297,9 +1373,7 @@
                   เป็นคู่สีที่ให้ความรู้สึกหรูหราและอบอุ่น สื่อถึงความบริสุทธิ์ ความรักที่หวานชื่นและความอ่อนโยนที่เป็นธรรมชาติ เหมาะสำหรับงานแต่งงานที่เรียบง่ายแต่เปี่ยมด้วยความสง่างาม
                 </p>
               </div>
-
             </div>
-
 
             <div className="section w-full flex flex-col items-center justify-center bg-[#f3f4f6] p-8">
               <div className="flex items-center justify-center mb-4">
@@ -1465,6 +1539,7 @@
 
             <div className="section w-full flex flex-col items-center justify-center bg-[#F8EDEB] p-8">
               <Gallery />
+              <ChatBot />
             </div>
           </div>
         </ErrorBoundary>
