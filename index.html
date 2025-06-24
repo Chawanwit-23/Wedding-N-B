@@ -363,7 +363,7 @@
       }
 
       p {
-        font-size: 1rem !important;
+        font-size: 1rem;
       }
 
       .countdown-number {
@@ -617,6 +617,18 @@
         transform: translateY(-5px);
       }
     }
+
+    .rsvp-text {
+      font-size: 0.875rem;
+      /* เริ่มต้นที่ text-sm */
+    }
+
+    @media (min-width: 768px) {
+      .rsvp-text {
+        font-size: 1rem;
+        /* md:text-base */
+      }
+    }
   </style>
 </head>
 
@@ -762,18 +774,18 @@
             />
             <div className="flex flex-col md:flex-row items-center justify-center text-center gap-8">
               <div>
-                <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
+                <p className="text-sm md:text-lg leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
                   นายบุญนิวัฒน์ ทองทรง<br />
                   นางจุเตี้ยน ทองทรง
                 </p>
               </div>
               <div>
-                <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#4A4A4A' }}>
+                <p className="text-2sm md:text-3lg leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#4A4A4A' }}>
                   และ
                 </p>
               </div>
               <div>
-                <p className="text-lg md:text-xl leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
+                <p className="text-sm md:text-lg leading-relaxed" style={{ fontFamily: "'Noto Serif Thai', serif", color: '#8B5A2B' }}>
                   นายบันยัติ กิ่งแก้ว<br />
                   นางขนิฐา กิ่งแก้ว
                 </p>
@@ -783,7 +795,7 @@
           <div className="flex items-center justify-center mb-4">
             <hr className="w-24 border-gray-400" />
             <p
-              className="mx-4 text-2xl md:text-3xl fade-in-text"
+              className="mx-4 text-lg md:text-2lg fade-in-text"
               style={{
                 fontFamily: "'Noto Serif Thai', serif",
                 fontWeight: 300,
@@ -1074,8 +1086,42 @@
                 >
                   Nat & Bat
                 </h1>
+
+                <div className="flex items-center justify-center mb-6">
+                  <hr className="w-24 border-gray-400" />
+                  <div className="mx-4 text-gray-400">◇</div>
+                  <hr className="w-24 border-gray-400" />
+                </div>
                 <p
-                  className="text-2xl md:text-3xl font-light mb-6 fade-in-up-delay"
+                  className="text-sm md:text-base font-light mb-6 fade-in-text rsvp-text" // เพิ่ม class "rsvp-text"
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 300,
+                    color: '#A0A0A0',
+                  }}
+                >
+                  กรุณาคลิกปุ่มด้านล่างเพื่อตอบรับและส่งคำอวยพรถึงบ่าวสาว
+                </p>
+                <a
+                  href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`flex items-center px-6 py-3 bg-[#F4B6C2] text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
+                  style={{
+                    fontFamily: "'Noto Serif Thai', serif",
+                    fontWeight: 400,
+                    color: '#4A4A4A',
+                  }}
+                  onClick={handleRsvpClick}
+                >
+                  ส่งคำตอบรับ-ส่งคำอวยพร
+                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
+                  </svg>
+                </a>
+
+                <p
+                  className="text-2sm md:text-3sm font-light mb-6 p-4 fade-in-up-delay"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1084,10 +1130,11 @@
                 >
                   New Chapter Begins
                 </p>
-                <div className="flex items-center justify-center mb-6">
+
+                <div className="flex items-center justify-center mb-6 ">
                   <hr className="w-24 border-gray-400" />
                   <p
-                    className="mx-4 text-lg md:text-xl fade-in-text"
+                    className="mx-4 text-sm md:text-lg fade-in-text"
                     style={{
                       fontFamily: "'Noto Serif Thai', serif",
                       fontWeight: 300,
@@ -1109,7 +1156,7 @@
                   26 กรกฎาคม 2568
                 </h2>
                 <p
-                  className="text-lg md:text-xl font-light max-w-2xl mx-auto fade-in-text"
+                  className="text-2sm md:text-3sm font-light max-w-2xl mx-auto fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1130,7 +1177,7 @@
               <div className="flex items-center justify-center mb-4">
                 <hr className="w-24 border-gray-400" />
                 <p
-                  className="mx-4 text-2xl md:text-3xl fade-in-text"
+                  className="mx-4 text-2lg md:text-3lg fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1305,7 +1352,7 @@
               <div className="flex items-center justify-center mb-4">
                 <hr className="w-24 border-gray-400" />
                 <p
-                  className="mx-4 text-2xl md:text-3xl fade-in-text"
+                  className="mx-4 text-2lg md:text-3lg fade-in-text"
                   style={{
                     fontFamily: "'Noto Serif Thai', serif",
                     fontWeight: 300,
@@ -1418,48 +1465,7 @@
                 >
                   Nat & Bat
                 </h1>
-                <p
-                  className="text-lg md:text-xl font-light mb-6 fade-in-text"
-                  style={{
-                    fontFamily: "'Noto Serif Thai', serif",
-                    fontWeight: 300,
-                    color: '#A0A0A0',
-                  }}
-                >
-                  (ตอบรับการเข้าร่วมงาน)
-                </p>
-                <div className="flex items-center justify-center mb-6">
-                  <hr className="w-24 border-gray-400" />
-                  <div className="mx-4 text-gray-400">◇</div>
-                  <hr className="w-24 border-gray-400" />
-                </div>
-                <p
-                  className="text-lg md:text-xl font-light mb-6 fade-in-text"
-                  style={{
-                    fontFamily: "'Noto Serif Thai', serif",
-                    fontWeight: 300,
-                    color: '#A0A0A0',
-                  }}
-                >
-                  กรุณาคลิกปุ่มด้านล่างเพื่อตอบรับและส่งคำอวยพรถึงบ่าวสาว
-                </p>
-                <a
-                  href="https://forms.gle/R3ShL4ZGf1AoSoQj7"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`flex items-center px-6 py-3 bg-[#F4B6C2] text-gray-800 rounded-lg shadow-md button-effect heart-effect ${heartClicked ? 'clicked' : ''}`}
-                  style={{
-                    fontFamily: "'Noto Serif Thai', serif",
-                    fontWeight: 400,
-                    color: '#4A4A4A',
-                  }}
-                  onClick={handleRsvpClick}
-                >
-                  ส่งคำตอบรับ-ส่งคำอวยพร
-                  <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </a>
+                
               </div>
             </div>
 
